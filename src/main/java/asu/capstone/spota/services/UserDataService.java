@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserDataService {
-    private final String DB_URL = "jdbc:postgresql://localhost/spotatest";
+    private final String DB_URL = "jdbc:postgresql://localhost/spotadev";
     private final String USER = "postgres";
     private final String PASS = "123";
 
