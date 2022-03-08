@@ -1,11 +1,19 @@
 package asu.capstone.spota.services;
 
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Connection;
-import java.sql.DriverManager;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
+import asu.capstone.spota.model.NewsResult;
 import asu.capstone.spota.model.UserAccount;
+import com.google.gson.Gson;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,24 +22,14 @@ public class UserDataService {
     private final String USER = "postgres";
     private final String PASS = "123";
 
+    @Autowired
+    private NBAService nbaService;
+
+    private static final Gson gson = new Gson();
+
     public UserDataService() {
         System.out.println("Service layer is created");
 
-        /*try(Connection dbc = DriverManager.getConnection(DB_URL, USER, PASS);
-            Statement stmt = dbc.createStatement();) {
-
-            String sql = "CREATE TABLE Users(" +
-                            "email text PRIMARY KEY, " +
-                            "firstName text, " +
-                            "lastName text, " +
-                            "username text, " +
-                            "birthday timestamp); ";
-
-            stmt.executeUpdate(sql);
-            System.out.println("users table created successfully");
-        } catch(SQLException e) {
-            e.printStackTrace();
-        }*/
     }
 
     //this method adds a new user account to the DB and should be called after user account creation
@@ -39,25 +37,118 @@ public class UserDataService {
         if(userAccount == null) {
             System.out.println("error: user account is null");
         }
-        try(Connection dbc = DriverManager.getConnection(DB_URL, USER, PASS);
-            Statement stmt = dbc.createStatement();) {
+       String sqlCommand = String.format("INSERT INTO Users (email, firstName, lastName, username)" +
+                                         "values ('%s','%s','%s','%s');",
+                                            userAccount.getEmail(),
+                                            userAccount.getFirstName(),
+                                            userAccount.getLastName(),
+                                            userAccount.getUsername());
 
-           String sqlCommand = String.format("INSERT INTO Users (email, firstName, lastName, username)" +
-                                             "values ('%s','%s','%s','%s');",
-                                                userAccount.getEmail(),
-                                                userAccount.getFirstName(),
-                                                userAccount.getLastName(),
-                                                userAccount.getUsername());
-
-            System.out.println(sqlCommand);
-
-            stmt.executeUpdate(sqlCommand);
+        if(updateDB(sqlCommand)) {
             System.out.println("successfully added new userAccount to DB");
             return true;
+        } else {
+            System.out.println("couldn't add user to DB");
+            return false;
+        }
+    }
+
+    //used to check if a user account exists in the DB
+    public boolean userExists(String email) {
+        try (Connection dbc = DriverManager.getConnection(DB_URL, USER, PASS);
+             Statement stmt = dbc.createStatement();) {
+            String sqlQuery = String.format("SELECT * FROM Users WHERE email= '%s';", email);
+            System.out.println(sqlQuery);
+
+            //getting result set from DB
+            ResultSet resultSet = stmt.executeQuery(sqlQuery);
+
+            if (resultSet.next()) {
+                //user exists in DB
+                System.out.println("user exists");
+                return true;
+            } else {
+                System.out.println("user doesn't exist");
+                return false;
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean addTeamSubscription(String email, String teamName) {
+        String sqlCommand = String.format("INSERT INTO hasTeamSubscription (email, teamName) values ('%s', '%s');", email, teamName);
+        if(updateDB(sqlCommand)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean removeTeamSubscription(String email, String teamName) {
+        String sqlCommand = String.format("DELETE FROM hasTeamSubscription WHERE email='%s' AND teamname='%s';", email, teamName);
+        if(updateDB(sqlCommand)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public String getNews(String userEmail) throws IOException, InterruptedException {
+        ArrayList<String> teamSubscriptions = new ArrayList<>();
+
+        try (Connection dbc = DriverManager.getConnection(DB_URL, USER, PASS);
+             Statement stmt = dbc.createStatement();) {
+
+            String sqlQuery = String.format("SELECT * FROM hasTeamSubscription where email='%s';", userEmail);
+
+            //getting result set from DB
+            ResultSet resultSet = stmt.executeQuery(sqlQuery);
+
+            while(resultSet.next()) {
+                //adding teams to the subscriptions list
+                teamSubscriptions.add(resultSet.getString("teamname"));
+            }
 
         } catch(SQLException e) {
             e.printStackTrace();
+        }
+        List<NewsResult> newsResults = nbaService.getNews(teamSubscriptions);
+        return gson.toJson(newsResults);
+    }
+
+    public boolean updateDB(String sqlCommand) {
+        try (Connection dbc = DriverManager.getConnection(DB_URL, USER, PASS);
+             Statement stmt = dbc.createStatement();) {
+
+            System.out.println(sqlCommand);
+
+            stmt.executeUpdate(sqlCommand); //updating the DB with INSERT, UPDATE, DELETE
+
+            stmt.close();
+            dbc.close();
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
             return false;
+        }
+    }
+
+    public ResultSet queryDB(String sqlCommand) {
+        try (Connection dbc = DriverManager.getConnection(DB_URL, USER, PASS);
+             Statement stmt = dbc.createStatement();) {
+
+            //getting result set from DB
+            ResultSet resultSet = stmt.executeQuery(sqlCommand);
+
+            stmt.close();
+            return resultSet;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

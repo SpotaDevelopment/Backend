@@ -1,4 +1,4 @@
-package com.example.demo;
+package asu.capstone.spota;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

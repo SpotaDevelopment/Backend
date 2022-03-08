@@ -14,7 +14,6 @@ public class UserAccount {
     private Date birthday;
     //private Image accountPicture;
     private ArrayList<League> favLeagues;
-    private ArrayList<Athelete> favPlayers;
     private ArrayList<ChatRoom> chats;
     private ArrayList<UserAccount> friends;
     private ArrayList<Notification> notifications; //will not be entirely persistent but updated since last login
