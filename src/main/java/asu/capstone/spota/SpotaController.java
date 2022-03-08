@@ -68,8 +68,11 @@ public class SpotaController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        userDataService.addNewUserAccount(newUser);
-        return new ResponseEntity<UserAccount>(newUser, HttpStatus.CREATED);
+        if(userDataService.addNewUserAccount(newUser)) {
+            return new ResponseEntity<UserAccount>(newUser, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<UserAccount>(newUser, HttpStatus.BAD_REQUEST);
+        }
     }
 
     //request for adding a team subscription to a users account
