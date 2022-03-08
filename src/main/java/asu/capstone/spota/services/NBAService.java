@@ -1,7 +1,6 @@
 package asu.capstone.spota.services;
 
-import asu.capstone.spota.model.News;
-import asu.capstone.spota.model.NewsResult;
+import asu.capstone.spota.model.*;
 import com.google.gson.Gson;
 import org.springframework.stereotype.Service;
 
@@ -39,5 +38,9 @@ public class NBAService {
         }
 
         return newsResults;
+    }
+
+    public List<Score> getScores(List<String> teamSubscriptions) {
+        return null;
     }
 }

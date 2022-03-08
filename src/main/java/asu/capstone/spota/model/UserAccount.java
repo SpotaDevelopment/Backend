@@ -2,6 +2,7 @@ package asu.capstone.spota.model;
 
 import lombok.Data;
 
+import java.time.temporal.TemporalQueries;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -11,7 +12,7 @@ public class UserAccount {
     private String lastName;
     private String username;
     private String email;
-    private Date birthday;
+    private String birthday;
     //private Image accountPicture;
     private ArrayList<League> favLeagues;
     private ArrayList<ChatRoom> chats;
@@ -26,6 +27,11 @@ public class UserAccount {
         this.username = username;
         this.email = email;
         //this.birthday = parseBirthday(birthday);
+    }
+
+    public UserAccount(String username, String email) {
+        this.username = username;
+        this.email = email;
     }
 
     public Date parseBirthday(String birthday) {
