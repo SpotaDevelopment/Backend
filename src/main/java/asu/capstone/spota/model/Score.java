@@ -1,2 +1,8 @@
-package asu.capstone.spota.model;public class Score {
+package asu.capstone.spota.model;
+
+import lombok.Data;
+
+@Data
+public class Score {
+
 }

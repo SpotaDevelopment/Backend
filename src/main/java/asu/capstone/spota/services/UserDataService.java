@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserDataService {
-    private final String DB_URL = "jdbc:postgresql://localhost/spotatest";
+    private final String DB_URL = "jdbc:postgresql://localhost/spotadev";
     private final String USER = "postgres";
     private final String PASS = "123";
 
@@ -37,11 +37,9 @@ public class UserDataService {
         if(userAccount == null) {
             System.out.println("error: user account is null");
         }
-       String sqlCommand = String.format("INSERT INTO Users (email, firstName, lastName, username)" +
-                                         "values ('%s','%s','%s','%s');",
+       String sqlCommand = String.format("INSERT INTO Users (email, username)" +
+                                         "values ('%s','%s');",
                                             userAccount.getEmail(),
-                                            userAccount.getFirstName(),
-                                            userAccount.getLastName(),
                                             userAccount.getUsername());
 
         if(updateDB(sqlCommand)) {
@@ -116,6 +114,29 @@ public class UserDataService {
         }
         List<NewsResult> newsResults = nbaService.getNews(teamSubscriptions);
         return gson.toJson(newsResults);
+    }
+
+    public String getScores(String userEmail) {
+        //team subscription list for the user
+        ArrayList<String> teamSubscriptions = new ArrayList<>();
+
+        try (Connection dbc = DriverManager.getConnection(DB_URL, USER, PASS);
+             Statement stmt = dbc.createStatement();) {
+
+            String sqlQuery = String.format("SELECT * FROM hasTeamSubscription where email='%s';", userEmail);
+
+            //getting result set from DB
+            ResultSet resultSet = stmt.executeQuery(sqlQuery);
+
+            while(resultSet.next()) {
+                //adding teams to the subscriptions list
+                teamSubscriptions.add(resultSet.getString("teamname"));
+            }
+
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public boolean updateDB(String sqlCommand) {

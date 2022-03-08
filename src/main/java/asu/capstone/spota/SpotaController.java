@@ -37,9 +37,18 @@ public class SpotaController {
 	}
 
     //request for getting all NBA news for a user given their email address
-    @GetMapping(path = "users/getNews/{email}")
+    @GetMapping(path = "/users/getNews/{email}")
     public String getNews(@PathVariable String email) throws IOException, InterruptedException {
         String response = userDataService.getNews(email);
+
+        System.out.println(response);
+        return response;
+    }
+
+    //request for getting the latest NBA scores for a user
+    @GetMapping(path = "/users/getScores/{email}")
+    public String getScores(@PathVariable String email) {
+        String response = userDataService.getScores(email);
 
         System.out.println(response);
         return response;
@@ -54,7 +63,7 @@ public class SpotaController {
 
         try {
             UserAccount reqBody = gson.fromJson(userAccount, UserAccount.class);
-            newUser = new UserAccount(reqBody.getFirstName(), reqBody.getLastName(), reqBody.getUsername(), reqBody.getEmail());
+            newUser = new UserAccount(reqBody.getFirstName(), reqBody.getEmail());
 
         } catch (Exception e) {
             e.printStackTrace();
