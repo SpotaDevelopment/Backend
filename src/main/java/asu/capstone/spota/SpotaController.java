@@ -63,7 +63,7 @@ public class SpotaController {
 
         try {
             UserAccount reqBody = gson.fromJson(userAccount, UserAccount.class);
-            newUser = new UserAccount(reqBody.getFirstName(), reqBody.getEmail());
+            newUser = new UserAccount(reqBody.getUsername(), reqBody.getEmail());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,7 +71,7 @@ public class SpotaController {
         if(userDataService.addNewUserAccount(newUser)) {
             return new ResponseEntity<UserAccount>(newUser, HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<UserAccount>(newUser, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<UserAccount>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
