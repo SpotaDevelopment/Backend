@@ -1,19 +1,15 @@
 package asu.capstone.spota.services;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import asu.capstone.spota.model.NewsResult;
+import asu.capstone.spota.model.Game;
 import asu.capstone.spota.model.UserAccount;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -136,7 +132,8 @@ public class UserDataService {
         } catch(SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        List<Game> scores = nbaService.getScores(teamSubscriptions);
+        return gson.toJson(scores);
     }
 
     public boolean updateDB(String sqlCommand) {

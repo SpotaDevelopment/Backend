@@ -5,17 +5,20 @@ import com.google.gson.Gson;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @Service
 public class NBAService {
+    private final String DB_URL = "jdbc:postgresql://localhost/spotadev";
+    private final String USER = "postgres";
+    private final String PASS = "123";
     private static final Gson gson = new Gson();
 
     public List<NewsResult> getNews(List<String> teamSubscriptions) throws IOException, InterruptedException {
@@ -40,7 +43,35 @@ public class NBAService {
         return newsResults;
     }
 
-    public List<Score> getScores(List<String> teamSubscriptions) {
-        return null;
+    public List<Game> getScores(List<String> teamSubscriptions) {
+        List<Game> gameScores = new ArrayList<>();
+
+        try (Connection dbc = DriverManager.getConnection(DB_URL, USER, PASS);
+             Statement stmt = dbc.createStatement();) {
+
+            for(String teamName : teamSubscriptions) {
+                String sqlQuery = String.format("SELECT * FROM games where homeTeamName='%s' OR awayTeamName='%s';", teamName, teamName);
+
+                //getting result set from DB
+                ResultSet resultSet = stmt.executeQuery(sqlQuery);
+
+                while (resultSet.next()) {
+                    //adding teams to the subscriptions list
+                    Game game = new Game();
+                    game.setHomeTeamName(resultSet.getString("homeTeamName"));
+                    game.setAwayTeamName(resultSet.getString("awayTeamName"));
+                    game.setHomeTeamAbrv(resultSet.getString("homeTeamAbrv"));
+                    game.setAwayTeamAbrv(resultSet.getString("awayTeamAbrv"));
+                    game.setHomeTeamScore(Integer.parseInt(resultSet.getString("homeTeamScore")));
+                    game.setAwayTeamScore(Integer.parseInt(resultSet.getString("awayTeamScore")));
+                    game.setDate(resultSet.getString("date"));
+                    gameScores.add(game);
+                }
+            }
+
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return gameScores;
     }
 }
