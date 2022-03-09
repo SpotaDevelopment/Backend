@@ -4,6 +4,7 @@ import asu.capstone.spota.model.*;
 import asu.capstone.spota.services.*;
 import com.google.gson.Gson;
 
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -58,7 +59,7 @@ public class SpotaController {
     @PostMapping(path = "/users/signUp",
                  consumes = MediaType.APPLICATION_JSON_VALUE,
                  produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserAccount> createUserAccount(@RequestBody String userAccount) {
+    public ResponseEntity<String> createUserAccount(@RequestBody String userAccount) {
         UserAccount newUser = null;
 
         try {
@@ -69,9 +70,9 @@ public class SpotaController {
             e.printStackTrace();
         }
         if(userDataService.addNewUserAccount(newUser)) {
-            return new ResponseEntity<UserAccount>(newUser, HttpStatus.CREATED);
+            return new ResponseEntity<>(gson.toJson(userAccount), HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<UserAccount>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("user already exists in database", HttpStatus.BAD_REQUEST);
         }
     }
 
