@@ -33,10 +33,13 @@ public class UserDataService {
         if(userAccount == null) {
             System.out.println("error: user account is null");
         }
-       String sqlCommand = String.format("INSERT INTO Users (email, username)" +
-                                         "values ('%s','%s');",
+       String sqlCommand = String.format("INSERT INTO Users (email, username, firstName, lastName, birthday)" +
+                                         "values ('%s','%s', '%s', '%s', '%s');",
                                             userAccount.getEmail(),
-                                            userAccount.getUsername());
+                                            userAccount.getUsername(),
+                                            userAccount.getFirstName(),
+                                            userAccount.getLastName(),
+                                            userAccount.getBirthday());
 
         if(updateDB(sqlCommand)) {
             System.out.println("successfully added new userAccount to DB");
@@ -81,7 +84,7 @@ public class UserDataService {
     }
 
     public boolean removeTeamSubscription(String email, String teamName) {
-        String sqlCommand = String.format("DELETE FROM hasTeamSubscription WHERE email='%s' AND teamname='%s';", email, teamName);
+        String sqlCommand = String.format("DELETE FROM hasTeamSubscription WHERE email='%s' AND teamName='%s';", email, teamName);
         if(updateDB(sqlCommand)) {
             return true;
         } else {

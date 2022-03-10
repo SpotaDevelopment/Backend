@@ -21,12 +21,12 @@ public class UserAccount {
 
     public UserAccount() { }
 
-    public UserAccount(String firstName, String lastName, String username, String email) {
+    public UserAccount(String firstName, String lastName, String username, String email, String birthday) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.email = email;
-        //this.birthday = parseBirthday(birthday);
+        this.birthday = birthday;
     }
 
     public UserAccount(String username, String email) {
