@@ -11,4 +11,8 @@ public class Game {
     String date;
     int homeTeamScore;
     int awayTeamScore;
+    int homeTeamWins;
+    int homeTeamLosses;
+    int awayTeamWins;
+    int awayTeamLosses;
 }
