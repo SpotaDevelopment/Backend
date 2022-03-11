@@ -5,6 +5,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import asu.capstone.spota.model.News;
 import asu.capstone.spota.model.NewsResult;
 import asu.capstone.spota.model.Game;
 import asu.capstone.spota.model.UserAccount;
@@ -74,6 +75,7 @@ public class UserDataService {
         return false;
     }
 
+    //adds a team to a users team subscription list
     public boolean addTeamSubscription(String email, String teamName) {
         String sqlCommand = String.format("INSERT INTO hasTeamSubscription (email, teamName) values ('%s', '%s');", email, teamName);
         if(updateDB(sqlCommand)) {
@@ -83,6 +85,7 @@ public class UserDataService {
         }
     }
 
+    //removes a team from a users team subscription list
     public boolean removeTeamSubscription(String email, String teamName) {
         String sqlCommand = String.format("DELETE FROM hasTeamSubscription WHERE email='%s' AND teamName='%s';", email, teamName);
         if(updateDB(sqlCommand)) {
@@ -92,6 +95,7 @@ public class UserDataService {
         }
     }
 
+    //getting specific news for a user according to their subscribed teams
     public String getNews(String userEmail) throws IOException, InterruptedException {
         ArrayList<String> teamSubscriptions = new ArrayList<>();
 
@@ -115,9 +119,17 @@ public class UserDataService {
         return gson.toJson(newsResults);
     }
 
+    //getting general news for a user with no team subscriptions or an unauthenticated user
+    public String getGeneralNews() throws IOException, InterruptedException {
+        News[] newsResults = nbaService.getGeneralNews();
+        return gson.toJson(newsResults);
+    }
+
+    //getting specific scores for a user according to their subscribed teams
     public String getScores(String userEmail) {
         //team subscription list for the user
         ArrayList<String> teamSubscriptions = new ArrayList<>();
+
 
         try (Connection dbc = DriverManager.getConnection(DB_URL, USER, PASS);
              Statement stmt = dbc.createStatement();) {
@@ -136,6 +148,11 @@ public class UserDataService {
             e.printStackTrace();
         }
         List<Game> scores = nbaService.getScores(teamSubscriptions);
+        return gson.toJson(scores);
+    }
+
+    public String getGeneralScores() {
+        List<Game> scores = nbaService.getGeneralScores();
         return gson.toJson(scores);
     }
 

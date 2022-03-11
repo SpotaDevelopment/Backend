@@ -46,10 +46,27 @@ public class SpotaController {
         return response;
     }
 
+    @GetMapping(path = "/users/getGeneralNews")
+    public String getGeneralNews() throws IOException, InterruptedException {
+        String response = userDataService.getGeneralNews();
+
+        System.out.println(response);
+        return response;
+    }
+
     //request for getting the latest NBA scores for a user
     @GetMapping(path = "/users/getScores/{email}")
     public String getScores(@PathVariable String email) {
         String response = userDataService.getScores(email);
+
+        System.out.println(response);
+        return response;
+    }
+
+    //request for getting latest NBA scores across the league
+    @GetMapping(path = "users/getGeneralScores")
+    public String getGeneralScores() {
+        String response = userDataService.getGeneralScores();
 
         System.out.println(response);
         return response;
