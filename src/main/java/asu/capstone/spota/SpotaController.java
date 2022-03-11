@@ -64,7 +64,7 @@ public class SpotaController {
     }
 
     //request for getting latest NBA scores across the league
-    @GetMapping(path = "users/getGeneralScores")
+    @GetMapping(path = "/users/getGeneralScores")
     public String getGeneralScores() {
         String response = userDataService.getGeneralScores();
 
