@@ -43,6 +43,19 @@ public class NBAService {
         return newsResults;
     }
 
+    public News[] getGeneralNews() throws IOException, InterruptedException {
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://nba-latest-news.p.rapidapi.com/news/source/espn"))
+                .header("x-rapidapi-host", "nba-latest-news.p.rapidapi.com")
+                .header("x-rapidapi-key", "da9149073emsh6df90e41f689663p115dffjsnf48aee52819c")
+                .method("GET", HttpRequest.BodyPublishers.noBody())
+                .build();
+        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+        News[] newsList = gson.fromJson(response.body(), News[].class);
+        return newsList;
+    }
+
     public List<Game> getScores(List<String> teamSubscriptions) {
         List<Game> gameScores = new ArrayList<>();
 
@@ -74,6 +87,39 @@ public class NBAService {
             }
 
         } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return gameScores;
+    }
+
+    public List<Game> getGeneralScores() {
+        List<Game> gameScores = new ArrayList<>();
+
+        try (Connection dbc = DriverManager.getConnection(DB_URL, USER, PASS);
+             Statement stmt = dbc.createStatement();) {
+
+                String sqlQuery = String.format("SELECT * FROM games");
+
+                //getting result set from DB
+                ResultSet resultSet = stmt.executeQuery(sqlQuery);
+
+                while (resultSet.next()) {
+                    //adding teams to the subscriptions list
+                    Game game = new Game();
+                    game.setHomeTeamName(resultSet.getString("homeTeamName"));
+                    game.setAwayTeamName(resultSet.getString("awayTeamName"));
+                    game.setHomeTeamAbrv(resultSet.getString("homeTeamAbrv"));
+                    game.setAwayTeamAbrv(resultSet.getString("awayTeamAbrv"));
+                    game.setDate(resultSet.getString("date"));
+                    game.setHomeTeamScore(Integer.parseInt(resultSet.getString("homeTeamScore")));
+                    game.setAwayTeamScore(Integer.parseInt(resultSet.getString("awayTeamScore")));
+                    game.setHomeTeamWins(Integer.parseInt(resultSet.getString("homeTeamWins")));
+                    game.setHomeTeamLosses(Integer.parseInt(resultSet.getString("homeTeamLosses")));
+                    game.setAwayTeamWins(Integer.parseInt(resultSet.getString("awayTeamWins")));
+                    game.setAwayTeamLosses(Integer.parseInt(resultSet.getString("awayTeamLosses")));
+                    gameScores.add(game);
+                }
+            } catch (SQLException e) {
             e.printStackTrace();
         }
         return gameScores;
