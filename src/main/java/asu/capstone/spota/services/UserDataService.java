@@ -151,7 +151,7 @@ public class UserDataService {
         return gson.toJson(scores);
     }
 
-    public String getGeneralScores() {
+    public String getGeneralScores() throws IOException, InterruptedException {
         List<Game> scores = nbaService.getGeneralScores();
         return gson.toJson(scores);
     }

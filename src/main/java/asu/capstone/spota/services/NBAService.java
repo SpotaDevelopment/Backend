@@ -93,7 +93,7 @@ public class NBAService {
         return gameScores;
     }
 
-    public List<Game> getGeneralScores() {
+    public List<Game> getGeneralScores() throws IOException, InterruptedException {
         List<Game> gameScores = new ArrayList<>();
 
         try (Connection dbc = DriverManager.getConnection(DB_URL, USER, PASS);

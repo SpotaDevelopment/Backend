@@ -65,10 +65,10 @@ public class SpotaController {
 
     //request for getting latest NBA scores across the league
     @GetMapping(path = "/users/getGeneralScores")
-    public String getGeneralScores() {
+    public String getGeneralScores() throws IOException, InterruptedException {
         String response = userDataService.getGeneralScores();
 
-        System.out.println(response);
+        //System.out.println(response);
         return response;
     }
 
