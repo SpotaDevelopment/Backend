@@ -78,10 +78,11 @@ public class NBAService {
                     game.setDate(resultSet.getString("date"));
                     game.setHomeTeamScore(Integer.parseInt(resultSet.getString("homeTeamScore")));
                     game.setAwayTeamScore(Integer.parseInt(resultSet.getString("awayTeamScore")));
-                    game.setHomeTeamWins(Integer.parseInt(resultSet.getString("homeTeamWins")));
+		    game.setHomeTeamWins(Integer.parseInt(resultSet.getString("homeTeamWins")));
                     game.setHomeTeamLosses(Integer.parseInt(resultSet.getString("homeTeamLosses")));
                     game.setAwayTeamWins(Integer.parseInt(resultSet.getString("awayTeamWins")));
                     game.setAwayTeamLosses(Integer.parseInt(resultSet.getString("awayTeamLosses")));
+                    game.setDate(resultSet.getString("date"));
                     gameScores.add(game);
                 }
             }
