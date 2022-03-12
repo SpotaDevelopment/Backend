@@ -39,11 +39,16 @@ public class SpotaController {
 
     //request for getting all NBA news for a user given their email address
     @GetMapping(path = "/users/getNews/{email}")
-    public String getNews(@PathVariable String email) throws IOException, InterruptedException {
+    public ResponseEntity<String> getNews(@PathVariable String email) throws IOException, InterruptedException {
         String response = userDataService.getNews(email);
 
         System.out.println(response);
-        return response;
+        if(response == null) {
+            return new ResponseEntity<>("there is no news to get.", HttpStatus.BAD_REQUEST);
+        } else if(response == "user doesn't exist") {
+            return new ResponseEntity<>("user doesn't exist.", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(path = "/users/getGeneralNews")
@@ -59,16 +64,25 @@ public class SpotaController {
     public ResponseEntity<String> getScores(@PathVariable String email) {
         String response = userDataService.getScores(email);
 
+        System.out.println(response);
+        if(response == null) {
+            return new ResponseEntity<>("there are no scores to get.", HttpStatus.BAD_REQUEST);
+        } else if(response == "user doesn't exist") {
+            return new ResponseEntity<>("user doesn't exist.", HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     //request for getting latest NBA scores across the league
     @GetMapping(path = "/users/getGeneralScores")
-    public String getGeneralScores() throws IOException, InterruptedException {
+    public ResponseEntity<String> getGeneralScores() throws IOException, InterruptedException {
         String response = userDataService.getGeneralScores();
 
-        System.out.println(response);
-        return response;
+        if(response == null) {
+            return new ResponseEntity<>("there are no scores to get.", HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     //request for signing up a new user account and adding them to DB

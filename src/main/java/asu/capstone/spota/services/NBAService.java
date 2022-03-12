@@ -57,6 +57,7 @@ public class NBAService {
     }
 
     public List<Game> getScores(List<String> teamSubscriptions) {
+
         List<Game> gameScores = new ArrayList<>();
 
         try (Connection dbc = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -87,6 +88,7 @@ public class NBAService {
             }
         } catch(SQLException e) {
             e.printStackTrace();
+            return null;
         }
         return gameScores;
     }
@@ -122,6 +124,7 @@ public class NBAService {
                 }
             } catch (SQLException e) {
             e.printStackTrace();
+            return null;
         }
         return gameScores;
     }
