@@ -56,11 +56,10 @@ public class SpotaController {
 
     //request for getting the latest NBA scores for a user
     @GetMapping(path = "/users/getScores/{email}")
-    public String getScores(@PathVariable String email) {
+    public ResponseEntity<String> getScores(@PathVariable String email) {
         String response = userDataService.getScores(email);
 
-        System.out.println(response);
-        return response;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     //request for getting latest NBA scores across the league
@@ -94,16 +93,16 @@ public class SpotaController {
     }
 
     //request for adding a team subscription to a users account
-    @PostMapping(path = "/users/teamSubscription/{teamName}/{email}")
-    public ResponseEntity<String> addTeamSubscription(@PathVariable String teamName, @PathVariable String email) {
+    @PostMapping(path = "/users/addTeamSubscriptions/{email}")
+    public ResponseEntity<String> addTeamSubscriptions(@RequestBody List<String> teamNames, @PathVariable String email) {
         try {
             if(userDataService.userExists(email)) {
-                if(userDataService.addTeamSubscription(email, teamName)) {
+                if(userDataService.addTeamsSubscription(email, teamNames)) {
                     //successfully added team to user account subscription
                     return new ResponseEntity<>("successfully added team", HttpStatus.OK);
                 } else {
                     //could not add team since team already exists in subscriptions
-                    return new ResponseEntity<>("team already exists in subscriptions", HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>("there was an error adding team to the database", HttpStatus.BAD_REQUEST);
                 }
             } else {
                 return new ResponseEntity<>("user doesn't exist in system", HttpStatus.BAD_REQUEST);
@@ -115,11 +114,11 @@ public class SpotaController {
     }
 
     //request for removing a team from the subscriptions of a user account
-    @PostMapping(path = "/users/removeTeamSubscription/{teamName}/{email}")
-    public ResponseEntity<String> removeTeamSubscription(@PathVariable String teamName, @PathVariable String email) {
+    @PostMapping(path = "/users/removeTeamSubscriptions/{email}")
+    public ResponseEntity<String> removeTeamSubscription(@PathVariable List<String> teamNames, @PathVariable String email) {
         try {
             if(userDataService.userExists(email)) {
-                if(userDataService.removeTeamSubscription(email, teamName)) {
+                if(userDataService.removeTeamsSubscription(email, teamNames)) {
                     //successfully added team to user account subscription
                     return new ResponseEntity<>("successfully removed the team", HttpStatus.OK);
                 } else {
