@@ -76,23 +76,25 @@ public class UserDataService {
     }
 
     //adds a team to a users team subscription list
-    public boolean addTeamSubscription(String email, String teamName) {
-        String sqlCommand = String.format("INSERT INTO hasTeamSubscription (email, teamName) values ('%s', '%s');", email, teamName);
-        if(updateDB(sqlCommand)) {
-            return true;
-        } else {
-            return false;
+    public boolean addTeamsSubscription(String email, List<String> teamNames) {
+        for(String teamName : teamNames) {
+            String sqlCommand = String.format("INSERT INTO hasTeamSubscription (email, teamName) values ('%s', '%s');", email, teamName);
+            if (!updateDB(sqlCommand)) {
+                return false;
+            }
         }
+        return true;
     }
 
     //removes a team from a users team subscription list
-    public boolean removeTeamSubscription(String email, String teamName) {
-        String sqlCommand = String.format("DELETE FROM hasTeamSubscription WHERE email='%s' AND teamName='%s';", email, teamName);
-        if(updateDB(sqlCommand)) {
-            return true;
-        } else {
-            return false;
+    public boolean removeTeamsSubscription(String email, List<String> teamNames) {
+        for(String teamName: teamNames) {
+            String sqlCommand = String.format("DELETE FROM hasTeamSubscription WHERE email='%s' AND teamName='%s';", email, teamName);
+            if (!updateDB(sqlCommand)) {
+                return false;
+            }
         }
+        return true;
     }
 
     //getting specific news for a user according to their subscribed teams

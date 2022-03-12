@@ -82,11 +82,9 @@ public class NBAService {
                     game.setHomeTeamLosses(Integer.parseInt(resultSet.getString("homeTeamLosses")));
                     game.setAwayTeamWins(Integer.parseInt(resultSet.getString("awayTeamWins")));
                     game.setAwayTeamLosses(Integer.parseInt(resultSet.getString("awayTeamLosses")));
-                    game.setDate(resultSet.getString("date"));
                     gameScores.add(game);
                 }
             }
-
         } catch(SQLException e) {
             e.printStackTrace();
         }
@@ -99,7 +97,7 @@ public class NBAService {
         try (Connection dbc = DriverManager.getConnection(DB_URL, USER, PASS);
              Statement stmt = dbc.createStatement();) {
 
-                String sqlQuery = String.format("SELECT * FROM games");
+                String sqlQuery = String.format("SELECT * FROM games;");
 
                 //getting result set from DB
                 ResultSet resultSet = stmt.executeQuery(sqlQuery);
@@ -107,6 +105,7 @@ public class NBAService {
                 while (resultSet.next()) {
                     //adding teams to the subscriptions list
                     Game game = new Game();
+
                     game.setHomeTeamName(resultSet.getString("homeTeamName"));
                     game.setAwayTeamName(resultSet.getString("awayTeamName"));
                     game.setHomeTeamAbrv(resultSet.getString("homeTeamAbrv"));
@@ -118,6 +117,7 @@ public class NBAService {
                     game.setHomeTeamLosses(Integer.parseInt(resultSet.getString("homeTeamLosses")));
                     game.setAwayTeamWins(Integer.parseInt(resultSet.getString("awayTeamWins")));
                     game.setAwayTeamLosses(Integer.parseInt(resultSet.getString("awayTeamLosses")));
+
                     gameScores.add(game);
                 }
             } catch (SQLException e) {
