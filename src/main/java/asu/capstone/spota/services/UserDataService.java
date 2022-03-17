@@ -99,6 +99,10 @@ public class UserDataService {
 
     //getting specific news for a user according to their subscribed teams
     public String getNews(String userEmail) throws IOException, InterruptedException {
+        if(!userExists(userEmail)) {
+            return "user doesn't exist";
+        }
+
         ArrayList<String> teamSubscriptions = new ArrayList<>();
 
         try (Connection dbc = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -117,6 +121,11 @@ public class UserDataService {
         } catch(SQLException e) {
             e.printStackTrace();
         }
+
+        if(teamSubscriptions.size() == 0) {
+            return null;
+        }
+
         List<NewsResult> newsResults = nbaService.getNews(teamSubscriptions);
         return gson.toJson(newsResults);
     }
@@ -129,6 +138,10 @@ public class UserDataService {
 
     //getting specific scores for a user according to their subscribed teams
     public String getScores(String userEmail) {
+
+        if(!userExists(userEmail)) {
+            return "user doesn't exist";
+        }
         //team subscription list for the user
         ArrayList<String> teamSubscriptions = new ArrayList<>();
 
@@ -148,13 +161,29 @@ public class UserDataService {
 
         } catch(SQLException e) {
             e.printStackTrace();
+            return null;
         }
+
+        if(teamSubscriptions.size() == 0) {
+            return null;
+        }
+
         List<Game> scores = nbaService.getScores(teamSubscriptions);
+
+        if(scores == null) {
+            return null;
+        }
+
         return gson.toJson(scores);
     }
 
     public String getGeneralScores() throws IOException, InterruptedException {
         List<Game> scores = nbaService.getGeneralScores();
+
+        if(scores == null) {
+            return null;
+        }
+
         return gson.toJson(scores);
     }
 
