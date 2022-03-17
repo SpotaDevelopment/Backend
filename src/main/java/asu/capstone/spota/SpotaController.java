@@ -32,6 +32,11 @@ public class SpotaController {
 
     private static final Gson gson = new Gson();
 
+    @GetMapping("/")
+    String helloWorld() {
+        return "Hello World";
+    }
+
 	@GetMapping(value = "/hello/{name}")
 	public String hello(@PathVariable String name) {
 
