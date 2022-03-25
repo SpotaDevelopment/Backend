@@ -11,13 +11,23 @@ import asu.capstone.spota.model.Game;
 import asu.capstone.spota.model.UserAccount;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserDataService {
-    private final String DB_URL = "jdbc:postgresql://localhost/spotadev";
-    private final String USER = "postgres";
-    private final String PASS = "123";
+    @Value("${spring.datasource.url}")
+    private String DB_URL;
+
+    @Value("${spring.datasource.username}")
+    private String USER;
+
+    @Value("${spring.datasource.password}")
+    private String PASS;
+
+    //private final String DB_URL = "jdbc:postgres://fxlzstcmjwqycu:ad14bd3574fe265e40781011d35ba6619f1ede13bb3a529d7e30933bd85eda95@ec2-23-21-4-7.compute-1.amazonaws.com:5432/d6hr3nji5eoibj";
+    //private final String USER = "fxlzstcmjwqycu";
+    //private final String PASS = "ad14bd3574fe265e40781011d35ba6619f1ede13bb3a529d7e30933bd85eda95";
 
     @Autowired
     private NBAService nbaService;
@@ -138,6 +148,7 @@ public class UserDataService {
 
     //getting specific scores for a user according to their subscribed teams
     public String getScores(String userEmail) {
+        System.out.println(DB_URL + "\n" + USER + "\n" + PASS);
 
         if(!userExists(userEmail)) {
             return "user doesn't exist";

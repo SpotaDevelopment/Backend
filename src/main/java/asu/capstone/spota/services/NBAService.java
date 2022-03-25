@@ -2,6 +2,7 @@ package asu.capstone.spota.services;
 
 import asu.capstone.spota.model.*;
 import com.google.gson.Gson;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -16,9 +17,18 @@ import java.util.List;
 
 @Service
 public class NBAService {
-    private final String DB_URL = "jdbc:postgresql://localhost/spotadev";
-    private final String USER = "postgres";
-    private final String PASS = "123";
+    @Value("${spring.datasource.url}")
+    private String DB_URL;
+
+    @Value("${spring.datasource.username}")
+    private String USER;
+
+    @Value("${spring.datasource.password}")
+    private String PASS;
+
+    //private final String DB_URL = "jdbc:postgres://fxlzstcmjwqycu:ad14bd3574fe265e40781011d35ba6619f1ede13bb3a529d7e30933bd85eda95@ec2-23-21-4-7.compute-1.amazonaws.com:5432/d6hr3nji5eoibj";
+    //private final String USER = "fxlzstcmjwqycu";
+    //private final String PASS = "ad14bd3574fe265e40781011d35ba6619f1ede13bb3a529d7e30933bd85eda95";
     private static final Gson gson = new Gson();
 
     public List<NewsResult> getNews(List<String> teamSubscriptions) throws IOException, InterruptedException {
