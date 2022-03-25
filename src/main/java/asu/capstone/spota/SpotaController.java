@@ -61,7 +61,6 @@ public class SpotaController {
     public String getGeneralNews() throws IOException, InterruptedException {
         String response = userDataService.getGeneralNews();
 
-        //System.out.println(response);
         return response;
     }
 
@@ -70,7 +69,6 @@ public class SpotaController {
     public ResponseEntity<String> getScores(@PathVariable String email) {
         String response = userDataService.getScores(email);
 
-        //System.out.println(response);
         if(response == null) {
             return new ResponseEntity<>("there are no scores to get.", HttpStatus.BAD_REQUEST);
         } else if(response == "user doesn't exist") {
@@ -84,7 +82,6 @@ public class SpotaController {
     public ResponseEntity<String> getGeneralScores() throws IOException, InterruptedException {
         String response = userDataService.getGeneralScores();
 
-        //System.out.println(response);
         if(response == null) {
             return new ResponseEntity<>("there are no scores to get.", HttpStatus.BAD_REQUEST);
         }

@@ -25,10 +25,6 @@ public class UserDataService {
     @Value("${spring.datasource.password}")
     private String PASS;
 
-    //private final String DB_URL = "jdbc:postgres://fxlzstcmjwqycu:ad14bd3574fe265e40781011d35ba6619f1ede13bb3a529d7e30933bd85eda95@ec2-23-21-4-7.compute-1.amazonaws.com:5432/d6hr3nji5eoibj";
-    //private final String USER = "fxlzstcmjwqycu";
-    //private final String PASS = "ad14bd3574fe265e40781011d35ba6619f1ede13bb3a529d7e30933bd85eda95";
-
     @Autowired
     private NBAService nbaService;
 
@@ -148,7 +144,6 @@ public class UserDataService {
 
     //getting specific scores for a user according to their subscribed teams
     public String getScores(String userEmail) {
-        System.out.println(DB_URL + "\n" + USER + "\n" + PASS);
 
         if(!userExists(userEmail)) {
             return "user doesn't exist";
@@ -188,7 +183,7 @@ public class UserDataService {
         return gson.toJson(scores);
     }
 
-    public String getGeneralScores() {
+    public String getGeneralScores() throws IOException, InterruptedException {
         List<Game> scores = nbaService.getGeneralScores();
 
         if(scores == null) {
