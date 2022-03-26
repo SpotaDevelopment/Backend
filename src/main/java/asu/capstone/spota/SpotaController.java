@@ -43,12 +43,49 @@ public class SpotaController {
         return String.format("Hello %s!", name);
 	}
 
+    //request for getting a user object
+    @GetMapping(path = "/users/getUserByEmail/{email}")
+    public ResponseEntity<String> getUserByEmail(@PathVariable String email) throws IOException, InterruptedException {
+        String response = userDataService.getUserByEmail(email);
+
+        if(response == null) {
+            return new ResponseEntity<>("there is no user with that email", HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+    }
+
+    //request for getting a user by username
+    @GetMapping(path = "/users/getUserByUsername/{username}")
+    public ResponseEntity<String> getUserByUsername(@PathVariable String username) throws IOException, InterruptedException {
+        String response = userDataService.getUserByUsername(username);
+
+        if(response == null) {
+            return new ResponseEntity<>("there is no user with that username", HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+    }
+
+    //request for getting a list of users with first and last name
+    @GetMapping(path = "/users/getUsersByName/{name}")
+    public ResponseEntity<String> getUserByName(@PathVariable String name) {
+        String[] names = name.split(" ");
+
+        String response = userDataService.getUsersByName(names);
+
+        if(response == null) {
+            return new ResponseEntity<>("there is no user with that name", HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+    }
+
     //request for getting all NBA news for a user given their email address
     @GetMapping(path = "/users/getNews/{email}")
     public ResponseEntity<String> getNews(@PathVariable String email) throws IOException, InterruptedException {
         String response = userDataService.getNews(email);
 
-        //System.out.println(response);
         if(response == null) {
             return new ResponseEntity<>("there is no news to get.", HttpStatus.BAD_REQUEST);
         } else if(response == "user doesn't exist") {
