@@ -2,6 +2,7 @@ package asu.capstone.spota.services;
 
 import asu.capstone.spota.model.*;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,18 @@ public class NBAService {
 
     private static final Gson gson = new Gson();
 
+    public String getImageUrlForNews(String url) throws IOException, InterruptedException{
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://api.linkpreview.net/?key=2b434ee3e96620077f320912ef35cef7&q=" + url))
+                .method("GET", HttpRequest.BodyPublishers.noBody())
+                .build();
+        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+        ImageSource imageSource = gson.fromJson(response.body(), ImageSource.class);
+        String image = (imageSource.getImage());
+        return image;
+    }
+
+
     public List<NewsResult> getNews(List<String> teamSubscriptions) throws IOException, InterruptedException {
         List<NewsResult> newsResults = new ArrayList<>();
 
@@ -40,6 +53,10 @@ public class NBAService {
                     .build();
             HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
             News[] newsList = gson.fromJson(response.body(), News[].class);
+            for(News obj : newsList)
+            {
+                obj.setImage(getImageUrlForNews(obj.getUrl()));
+            }
             //newsResults = gson.fromJson(response.body(), ArrayList.class);
             NewsResult result = new NewsResult();
             result.setTeamName(teamName);
