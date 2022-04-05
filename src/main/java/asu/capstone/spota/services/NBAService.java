@@ -77,6 +77,9 @@ public class NBAService {
                 .build();
         HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
         News[] newsList = gson.fromJson(response.body(), News[].class);
+        for(News obj : newsList) {
+            obj.setImage(getImageUrlForNews(obj.getUrl()));
+        }
         return newsList;
     }
 
