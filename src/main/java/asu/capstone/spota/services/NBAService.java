@@ -21,6 +21,17 @@ public class NBAService {
     private final String PASS = "123";
     private static final Gson gson = new Gson();
 
+    public String getImageUrlForNews(String url) throws IOException, InterruptedException{
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://api.linkpreview.net/?key=2b434ee3e96620077f320912ef35cef7&q=" + url))
+                .method("GET", HttpRequest.BodyPublishers.noBody())
+                .build();
+        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+        JSONObject objJsonObject = new JSONObject(response.body().toString());
+        String image = (objJsonObject.getString("image"));
+        return image;
+    }
+
     public List<NewsResult> getNews(List<String> teamSubscriptions) throws IOException, InterruptedException {
         List<NewsResult> newsResults = new ArrayList<>();
 
@@ -34,6 +45,10 @@ public class NBAService {
             HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
             News[] newsList = gson.fromJson(response.body(), News[].class);
             //newsResults = gson.fromJson(response.body(), ArrayList.class);
+            for(News obj : newsList)
+            {
+                obj.setImage(getImageUrlForNews(obj.getUrl()));
+            }
             NewsResult result = new NewsResult();
             result.setTeamName(teamName);
             result.setNewsList(Arrays.asList(newsList));

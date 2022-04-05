@@ -7,4 +7,5 @@ public class News {
     private String url;
     private String title;
     private String source;
+    private String image;
 }
