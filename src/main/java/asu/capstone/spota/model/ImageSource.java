@@ -2,11 +2,11 @@ package asu.capstone.spota.model;
 
 import lombok.Data;
 
-import javax.swing.*;
 import java.util.ArrayList;
+import java.util.List;
 
 @Data
-public class ImageSource<Details> {
+public class ImageSource {
     private String url;
     private String domain;
     private String lastUpdated;
@@ -16,7 +16,7 @@ public class ImageSource<Details> {
     private boolean redirected;
     private String redirectionUrl;
     private float redirectionCount;
-    ArrayList<Object> redirectionTrail = new ArrayList<Object>();
+    List<String> redirectionTrail = new ArrayList<String>();
     private String title;
     private String description;
     private String name;
