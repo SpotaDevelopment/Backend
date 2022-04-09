@@ -151,11 +151,12 @@ public class UserDataService {
         if(prefix.length() > 0) {
 
             String sqlQuery = null;
+            String prefixInsert = prefix + '%';
 
             if(field.equals("email")) {
-                sqlQuery = String.format("SELECT * FROM users WHERE email LIKE '%s%';", prefix);
+                sqlQuery = String.format("SELECT * FROM users WHERE email LIKE '%s';", prefixInsert);
             } else if(field.equals("username")) {
-                sqlQuery = String.format("SELECT * FROM users WHERE username LIKE '%s%';", prefix);
+                sqlQuery = String.format("SELECT * FROM users WHERE username LIKE '%s';", prefixInsert);
             } else {
                 return "invalid field";
             }
