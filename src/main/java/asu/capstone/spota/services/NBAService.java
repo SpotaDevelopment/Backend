@@ -45,7 +45,7 @@ public class NBAService {
         HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
         ImageSource imageSource = gson.fromJson(response.body(), ImageSource.class);
         String image = (imageSource.getUrl());
-        if(image.equals("") || image == null)
+        if(image == "" || image == null)
         {
             return "";
         }
