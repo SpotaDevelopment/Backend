@@ -33,7 +33,7 @@ public class NBAService {
     public String getImageUrlForNews(String url) throws IOException, InterruptedException{
         String link = "link: " + url;
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://api.linkpreview.net/?key=2b434ee3e96620077f320912ef35cef7&q="))
+                .uri(URI.create("https://api.peekalink.io/"))
                 .headers("X-API-Key", "61c56243-8d41-4a34-82a3-e49b1bfd4d36")
                 .POST(HttpRequest.BodyPublishers.ofString(link))
                 .build();
