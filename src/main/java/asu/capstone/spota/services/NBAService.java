@@ -1,6 +1,7 @@
 package asu.capstone.spota.services;
 
 import asu.capstone.spota.model.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,10 +13,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Timer;
+import java.util.*;
 
 @Service
 public class NBAService {
@@ -31,16 +29,23 @@ public class NBAService {
     private static final Gson gson = new Gson();
 
     public String getImageUrlForNews(String url) throws IOException, InterruptedException{
-        String link = "link: " + url;
+        var values = new HashMap<String, String>() {{
+            put("link", url);
+        }};
+
+        var objectMapper = new ObjectMapper();
+        String requestBody = objectMapper
+                .writeValueAsString(values);
+
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://api.peekalink.io/"))
                 .headers("X-API-Key", "61c56243-8d41-4a34-82a3-e49b1bfd4d36")
-                .POST(HttpRequest.BodyPublishers.ofString(link))
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
         HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
         ImageSource imageSource = gson.fromJson(response.body(), ImageSource.class);
         String image = (imageSource.getUrl());
-        if(image == "" || image == null)
+        if(image.equals("") || image == null)
         {
             return "";
         }
