@@ -29,46 +29,18 @@ public class NBAService {
     private static final Gson gson = new Gson();
 
     public String getImageUrlForNews(String url) throws IOException, InterruptedException{
-        var values = new HashMap<String, String>() {{
-            put("link", url);
-        }};
-
-        var objectMapper = new ObjectMapper();
-        String requestBody = objectMapper
-                .writeValueAsString(values);
-
-        String link = String.format("{\"link\": %s}", url);
-
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://api.peekalink.io/"))
-                .headers("X-API-Key", "61c56243-8d41-4a34-82a3-e49b1bfd4d36")
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .uri(URI.create("http://api.linkpreview.net/?key=2b434ee3e96620077f320912ef35cef7&q=" + url))
+                .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();
         HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-        ImageSource imageSource = gson.fromJson(response.body(), ImageSource.class);
-        System.out.println("imageSource: " + imageSource);
-        System.out.println("image: " + imageSource.getImage().getUrl());
-        String image = (imageSource.getImage().getUrl());
+        ImageContent imageContent = gson.fromJson(response.body(), ImageContent.class);
+        String image = imageContent.getUrl();
         if(image == "" || image == null)
         {
             return "";
         }
         return image;
-        /*return image;
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://api.linkpreview.net/?key=2b434ee3e96620077f320912ef35cef7&q=" + url))
-                .headers("X-API-Key", "YourSecretKey")
-                .method("GET", HttpRequest.BodyPublishers.noBody());
-                .build();
-        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-        ImageSource imageSource = gson.fromJson(response.body(), ImageSource.class);
-        String image = (imageSource.getImage());
-        String image = (imageSource.getUrl());
-        if(image == "" || image == null)
-        {
-            return "";
-        }
-        return image;*/
     }
 
 
