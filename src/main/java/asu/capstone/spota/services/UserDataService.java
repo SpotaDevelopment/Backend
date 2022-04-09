@@ -146,6 +146,46 @@ public class UserDataService {
         }
     }
 
+    //get a list of users who match a given prefix
+    public String getUsersByPrefix(String prefix, String field) {
+        if(prefix.length() > 0) {
+
+            String sqlQuery = null;
+
+            if(field == "email") {
+                sqlQuery = String.format("SELECT * FROM users WHERE email LIKE '%s%';", prefix);
+            } else if(field == "username") {
+                sqlQuery = String.format("SELECT * FROM users WHERE username LIKE '%s%';", prefix);
+            } else {
+                return "invalid field";
+            }
+
+            try (Connection dbc = DriverManager.getConnection(DB_URL, USER, PASS);
+                 Statement stmt = dbc.createStatement();) {
+                List<UserAccount> users = new ArrayList<>();
+                ResultSet resultSet = stmt.executeQuery(sqlQuery);
+
+                while (resultSet.next()) {
+                    UserAccount user = new UserAccount();
+                    List<String> friendsList = getUserFriends(resultSet.getString("email"));
+                    user.setEmail(resultSet.getString("email"));
+                    user.setFirstName(resultSet.getString("firstname"));
+                    user.setLastName(resultSet.getString("lastname"));
+                    user.setUsername(resultSet.getString("username"));
+                    user.setBirthday(resultSet.getString("birthday"));
+                    user.setProfile_color(resultSet.getString("profile_color"));
+                    users.add(user);
+                }
+                return gson.toJson(users);
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        return "invalid prefix";
+    }
+
     //getting a list of users who match the name passed in
     public String getUsersByName(String[] names) {
         if(names.length < 1) {

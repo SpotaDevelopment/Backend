@@ -25,7 +25,6 @@ import java.util.List;
 
 @RestController
 public class SpotaController {
-    final int foo = 8;
 
     @Autowired
     private UserDataService userDataService;
@@ -42,6 +41,22 @@ public class SpotaController {
 
         return String.format("Hello %s!", name);
 	}
+
+    //request for getting a list of users with matching prefix for the field column
+    @GetMapping(path = "/users/getUsersByPrefix/{prefix}/{field}")
+    public ResponseEntity<String> getUserByPrefix(@PathVariable String prefix, @PathVariable String field) throws IOException, InterruptedException {
+        String response = userDataService.getUsersByPrefix(prefix, field);
+
+        if(response == "invalid prefix") {
+            return new ResponseEntity<>("that is an invalid prefix", HttpStatus.BAD_REQUEST);
+        } else if(response == "invalid field") {
+            return new ResponseEntity<>("that is an invalid field. must be email or username", HttpStatus.BAD_REQUEST);
+        } else if(response == null) {
+            return  new ResponseEntity<>("there was an error connecting to the database", HttpStatus.BAD_REQUEST);
+        } else {
+            return  new ResponseEntity<>(response, HttpStatus.OK);
+        }
+    }
 
     //request for getting a user object
     @GetMapping(path = "/users/getUserByEmail/{email}")
