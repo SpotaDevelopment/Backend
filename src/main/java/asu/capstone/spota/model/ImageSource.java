@@ -15,7 +15,7 @@ public class ImageSource {
     private String mimeType;
     private boolean redirected;
     private String redirectionUrl;
-    private float redirectionCount;
+    private int redirectionCount;
     List<String> redirectionTrail = new ArrayList<String>();
     private String title;
     private String description;

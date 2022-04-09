@@ -4,12 +4,12 @@ import lombok.Data;
 
 @Data
 public class Details {
-    public String type;
-    public String videoId;
-    public String duration;
-    public long viewCount;
-    public long likeCount;
-    public long dislikeCount;
-    public long commentCount;
-    public String publishedAt;
+    private String type;
+    private String videoId;
+    private String duration;
+    private long viewCount;
+    private long likeCount;
+    private long dislikeCount;
+    private long commentCount;
+    private String publishedAt;
 }
