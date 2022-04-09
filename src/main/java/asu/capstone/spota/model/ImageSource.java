@@ -3,7 +3,6 @@ package asu.capstone.spota.model;
 import lombok.Data;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 
 @Data
@@ -22,7 +21,7 @@ public class ImageSource<Details> {
     private String description;
     private String name;
     private boolean trackersDetected;
-    Icon IconObject;
-    Image ImageObject;
-    Details DetailsObject;
+    Icon icon;
+    Image image;
+    Details details;
 }

@@ -37,6 +37,8 @@ public class NBAService {
         String requestBody = objectMapper
                 .writeValueAsString(values);
 
+        String link = String.format("{\"link\": %s}", url);
+
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://api.peekalink.io/"))
                 .headers("X-API-Key", "61c56243-8d41-4a34-82a3-e49b1bfd4d36")
@@ -44,12 +46,25 @@ public class NBAService {
                 .build();
         HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
         ImageSource imageSource = gson.fromJson(response.body(), ImageSource.class);
-        String image = (imageSource.getUrl());
-        if(image.equals("") || image == null)
+        String image = (imageSource.getImage().getUrl());
+        if(image == "" || image == null)
         {
             return "";
         }
-        return image;
+        /*return image;
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://api.linkpreview.net/?key=2b434ee3e96620077f320912ef35cef7&q=" + url))
+                .headers("X-API-Key", "YourSecretKey")
+                .method("GET", HttpRequest.BodyPublishers.noBody());
+                .build();
+        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+        ImageSource imageSource = gson.fromJson(response.body(), ImageSource.class);
+        String image = (imageSource.getImage());
+        if(image == "" || image == null)
+        {
+            return "";
+        }
+        return image;*/
     }
 
 
