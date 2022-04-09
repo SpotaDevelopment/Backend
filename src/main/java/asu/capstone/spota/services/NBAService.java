@@ -15,6 +15,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
 
 @Service
 public class NBAService {
@@ -83,6 +84,7 @@ public class NBAService {
         News[] newsList = gson.fromJson(response.body(), News[].class);
         for(News obj : newsList) {
             obj.setImage(getImageUrlForNews(obj.getUrl()));
+            Thread.sleep(250);
         }
         return newsList;
     }
