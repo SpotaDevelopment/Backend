@@ -51,6 +51,7 @@ public class NBAService {
         {
             return "";
         }
+        return image;
         /*return image;
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://api.linkpreview.net/?key=2b434ee3e96620077f320912ef35cef7&q=" + url))
@@ -60,6 +61,7 @@ public class NBAService {
         HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
         ImageSource imageSource = gson.fromJson(response.body(), ImageSource.class);
         String image = (imageSource.getImage());
+        String image = (imageSource.getUrl());
         if(image == "" || image == null)
         {
             return "";
