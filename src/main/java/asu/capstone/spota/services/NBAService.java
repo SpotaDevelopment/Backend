@@ -84,7 +84,7 @@ public class NBAService {
         News[] newsList = gson.fromJson(response.body(), News[].class);
         for(News obj : newsList) {
             obj.setImage(getImageUrlForNews(obj.getUrl()));
-            Thread.sleep(200);
+            Thread.sleep(500);
         }
         return newsList;
     }
