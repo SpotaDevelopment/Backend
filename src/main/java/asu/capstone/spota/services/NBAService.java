@@ -31,13 +31,15 @@ public class NBAService {
     private static final Gson gson = new Gson();
 
     public String getImageUrlForNews(String url) throws IOException, InterruptedException{
+        String link = "link: " + url;
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://api.linkpreview.net/?key=2b434ee3e96620077f320912ef35cef7&q=" + url))
-                .method("GET", HttpRequest.BodyPublishers.noBody())
+                .uri(URI.create("http://api.linkpreview.net/?key=2b434ee3e96620077f320912ef35cef7&q="))
+                .headers("X-API-Key", "61c56243-8d41-4a34-82a3-e49b1bfd4d36")
+                .POST(HttpRequest.BodyPublishers.ofString(link))
                 .build();
         HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
         ImageSource imageSource = gson.fromJson(response.body(), ImageSource.class);
-        String image = (imageSource.getImage());
+        String image = (imageSource.getUrl());
         if(image == "" || image == null)
         {
             return "";
@@ -84,7 +86,6 @@ public class NBAService {
         News[] newsList = gson.fromJson(response.body(), News[].class);
         for(News obj : newsList) {
             obj.setImage(getImageUrlForNews(obj.getUrl()));
-            Thread.sleep(500);
         }
         return newsList;
     }
