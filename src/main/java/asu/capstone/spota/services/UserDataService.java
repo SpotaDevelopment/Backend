@@ -42,13 +42,14 @@ public class UserDataService {
         if(userAccount == null) {
             System.out.println("error: user account is null");
         }
-       String sqlCommand = String.format("INSERT INTO Users (email, username, firstName, lastName, birthday)" +
-                                         "values ('%s','%s', '%s', '%s', '%s');",
+       String sqlCommand = String.format("INSERT INTO Users (email, username, firstName, lastName, birthday, profile_color)" +
+                                         "values ('%s','%s', '%s', '%s', '%s', '%s');",
                                             userAccount.getEmail(),
                                             userAccount.getUsername(),
                                             userAccount.getFirstName(),
                                             userAccount.getLastName(),
-                                            userAccount.getBirthday());
+                                            userAccount.getBirthday(),
+                                            userAccount.getProfile_color());
 
         if(updateDB(sqlCommand)) {
             System.out.println("successfully added new userAccount to DB");
@@ -258,6 +259,7 @@ public class UserDataService {
         return null;
     }
 
+    //TODO return the users that are highest in a ranking: has mutual friends to the person being searched
     public String getUserByUsername(String username) {
         if(!usernameExists(username)) {
             return null;
