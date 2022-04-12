@@ -150,7 +150,7 @@ public class SpotaController {
 
         try {
             UserAccount reqBody = gson.fromJson(userAccount, UserAccount.class);
-            newUser = new UserAccount(reqBody.getFirstName(), reqBody.getLastName(), reqBody.getUsername(), reqBody.getEmail(), reqBody.getBirthday());
+            newUser = new UserAccount(reqBody.getFirstName(), reqBody.getLastName(), reqBody.getUsername(), reqBody.getEmail(), reqBody.getBirthday(), reqBody.getProfile_color());
 
         } catch (Exception e) {
             e.printStackTrace();
