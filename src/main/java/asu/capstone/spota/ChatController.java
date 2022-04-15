@@ -2,6 +2,7 @@ package asu.capstone.spota;
 
 
 import asu.capstone.spota.chatmodels.ChatMessage;
+import asu.capstone.spota.chatmodels.ChatNotification;
 import asu.capstone.spota.chatmodels.Greeting;
 import asu.capstone.spota.chatmodels.HelloMessage;
 import com.google.gson.Gson;
@@ -29,6 +30,9 @@ public class ChatController {
     @MessageMapping("/chat")
     public void processMessage(@Payload ChatMessage message) {
         messagingTemplate.convertAndSendToUser(
-                message.getRecipientId(),"/queue/messages","hello Brian");
+                message.getRecipientId(),"/queue/messages",
+                new ChatNotification(
+                        "1", "1", "Griffin"
+                ));
     }
 }
