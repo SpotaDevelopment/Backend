@@ -51,9 +51,12 @@ public class ChatController {
         System.out.println(dtf.format(now)); //printing the time of the message
 
 
-
+        String recepientID = "1";
+        if(message.getSenderId().equals("1")) {
+            recepientID = "2";
+        }
         messagingTemplate.convertAndSendToUser(
-                message.getRecipientId(), message.getGroupChat(),
+                recepientID, message.getGroupChat(),
                 new ChatNotification(
                         "1", message.getSenderId(), dtf.format(now)
                 )
