@@ -3,9 +3,9 @@ package asu.capstone.spota.model;
 import lombok.Data;
 
 @Data
-public class News {
-    private String url;
+public class ImageContent {
     private String title;
-    private String source;
+    private String description;
     private String image;
+    private String url;
 }

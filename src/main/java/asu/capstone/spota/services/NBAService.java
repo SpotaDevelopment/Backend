@@ -1,7 +1,10 @@
 package asu.capstone.spota.services;
 
 import asu.capstone.spota.model.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -10,16 +13,36 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class NBAService {
-    private final String DB_URL = "jdbc:postgresql://localhost/spotadev";
-    private final String USER = "postgres";
-    private final String PASS = "123";
+    @Value("${spring.datasource.url}")
+    private String DB_URL;
+
+    @Value("${spring.datasource.username}")
+    private String USER;
+
+    @Value("${spring.datasource.password}")
+    private String PASS;
+
     private static final Gson gson = new Gson();
+
+    public String getImageUrlForNews(String url) throws IOException, InterruptedException{
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://api.linkpreview.net/?key=2b434ee3e96620077f320912ef35cef7&q=" + url))
+                .method("GET", HttpRequest.BodyPublishers.noBody())
+                .build();
+        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+        ImageContent imageContent = gson.fromJson(response.body(), ImageContent.class);
+        String image = imageContent.getImage();
+        if(image == "" || image == null)
+        {
+            return "";
+        }
+        return image;
+    }
+
 
     public List<NewsResult> getNews(List<String> teamSubscriptions) throws IOException, InterruptedException {
         List<NewsResult> newsResults = new ArrayList<>();
@@ -33,6 +56,10 @@ public class NBAService {
                     .build();
             HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
             News[] newsList = gson.fromJson(response.body(), News[].class);
+            for(News obj : newsList)
+            {
+                obj.setImage(getImageUrlForNews(obj.getUrl()));
+            }
             //newsResults = gson.fromJson(response.body(), ArrayList.class);
             NewsResult result = new NewsResult();
             result.setTeamName(teamName);
@@ -53,6 +80,9 @@ public class NBAService {
                 .build();
         HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
         News[] newsList = gson.fromJson(response.body(), News[].class);
+        for(News obj : newsList) {
+            obj.setImage(getImageUrlForNews(obj.getUrl()));
+        }
         return newsList;
     }
 
@@ -93,7 +123,7 @@ public class NBAService {
         return gameScores;
     }
 
-    public List<Game> getGeneralScores() {
+    public List<Game> getGeneralScores() throws IOException, InterruptedException {
         List<Game> gameScores = new ArrayList<>();
 
         try (Connection dbc = DriverManager.getConnection(DB_URL, USER, PASS);

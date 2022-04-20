@@ -29,8 +29,6 @@
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.13.1" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.1" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.module:jackson-module-parameter-names:2.13.1" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-web:5.3.15" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-beans:5.3.15" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-webmvc:5.3.15" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-aop:5.3.15" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-context:5.3.15" level="project" />
@@ -75,5 +73,10 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-jcl:5.3.15" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework:spring-test:5.3.15" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.xmlunit:xmlunit-core:2.8.4" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-messaging:5.3.19" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-beans:5.3.15" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-web:5.3.19" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-websocket:2.6.3" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-websocket:5.3.15" level="project" />
   </component>
 </module>
