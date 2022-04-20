@@ -49,14 +49,12 @@ public class ChatController {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         System.out.println(dtf.format(now)); //printing the time of the message
+        System.out.println("Message senderID: " + message.getSenderId());
+        System.out.println("Message recepientID: " + message.getRecipientId());
 
 
-        String recepientID = "1";
-        if(message.getSenderId().equals("1")) {
-            recepientID = "2";
-        }
         messagingTemplate.convertAndSendToUser(
-                recepientID, message.getGroupChat(),
+                message.getGroupChat(), "/messages",
                 new ChatNotification(
                         "1", message.getSenderId(), dtf.format(now)
                 )
