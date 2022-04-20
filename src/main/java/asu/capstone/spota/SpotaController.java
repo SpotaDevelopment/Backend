@@ -156,6 +156,20 @@ public class SpotaController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    //request for getting a users subscribed teams
+    @GetMapping(path = "/users/getFavoriteTeams/{email}")
+    public ResponseEntity<String> getFavoriteTeams(@PathVariable String email) throws IOException, InterruptedException {
+        String response = userDataService.getFavoriteTeams(email);
+
+        if(response == null) {
+            return new ResponseEntity<>("the user doesn't exist in the system", HttpStatus.BAD_REQUEST);
+        } else if(response == "DB issue"){
+            return new ResponseEntity<>("there was an issue connecting to the database", HttpStatus.FAILED_DEPENDENCY);
+        } else {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+    }
+
     //request for signing up a new user account and adding them to DB
     @PostMapping(path = "/users/signUp",
             consumes = MediaType.APPLICATION_JSON_VALUE,

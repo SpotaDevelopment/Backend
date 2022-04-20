@@ -129,6 +129,29 @@ public class UserDataService {
         return true;
     }
 
+    public String getFavoriteTeams(String email) {
+        if(!userExists(email)) {
+            return null;
+        }
+        try (Connection dbc = DriverManager.getConnection(DB_URL, USER, PASS);
+             Statement stmt = dbc.createStatement();) {
+            String sqlQuery = String.format("SELECT * FROM hasTeamSubscription WHERE email='%s';", email);
+
+            //getting result set from DB
+            ResultSet resultSet = stmt.executeQuery(sqlQuery);
+
+            List<String> teams = new ArrayList<>();
+
+            while(resultSet.next()) {
+                teams.add(resultSet.getString("teamName"));
+            }
+            return gson.toJson(teams);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return "DB issue";
+    }
+
     public boolean addFriend(String user1, String user2) {
         String sqlCommand = String.format("INSERT INTO hasFriend(user1, user2) values ('%s', '%s');", user1, user2);
         if(!updateDB(sqlCommand)) {
