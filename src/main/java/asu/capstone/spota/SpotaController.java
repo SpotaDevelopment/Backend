@@ -37,20 +37,20 @@ public class SpotaController {
         return "Hello World";
     }
 
-	@GetMapping(value = "/hello/{name}")
-	public String hello(@PathVariable String name) {
+    @GetMapping(value = "/hello/{name}")
+    public String hello(@PathVariable String name) {
 
         return String.format("Hello %s!", name);
-	}
+    }
 
     //request for getting a list of friends
     @GetMapping(path = "/users/getFriends/{email}")
     public ResponseEntity<String> getFriends(@PathVariable String email) {
         String response = userDataService.getUserFriends(email);
 
-        if(response == "DB issue") {
+        if (response == "DB issue") {
             return new ResponseEntity<>("There was an issue accessing the database", HttpStatus.BAD_REQUEST);
-        } else if(response == null) {
+        } else if (response == null) {
             return new ResponseEntity<>("The user does not exist in the system", HttpStatus.BAD_REQUEST);
         } else {
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -62,14 +62,14 @@ public class SpotaController {
     public ResponseEntity<String> getUserByPrefix(@PathVariable String prefix, @PathVariable String field) throws IOException, InterruptedException {
         String response = userDataService.getUsersByPrefix(prefix, field);
 
-        if(response == "invalid prefix") {
+        if (response == "invalid prefix") {
             return new ResponseEntity<>("that is an invalid prefix", HttpStatus.BAD_REQUEST);
-        } else if(response == "invalid field") {
+        } else if (response == "invalid field") {
             return new ResponseEntity<>("that is an invalid field. must be email or username", HttpStatus.BAD_REQUEST);
-        } else if(response == null) {
-            return  new ResponseEntity<>("there was an error connecting to the database", HttpStatus.BAD_REQUEST);
+        } else if (response == null) {
+            return new ResponseEntity<>("there was an error connecting to the database", HttpStatus.BAD_REQUEST);
         } else {
-            return  new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 
@@ -78,7 +78,7 @@ public class SpotaController {
     public ResponseEntity<String> getUserByEmail(@PathVariable String email) throws IOException, InterruptedException {
         String response = userDataService.getUserByEmail(email);
 
-        if(response == null) {
+        if (response == null) {
             return new ResponseEntity<>("there is no user with that email", HttpStatus.BAD_REQUEST);
         } else {
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -90,7 +90,7 @@ public class SpotaController {
     public ResponseEntity<String> getUserByUsername(@PathVariable String username) throws IOException, InterruptedException {
         String response = userDataService.getUserByUsername(username);
 
-        if(response == null) {
+        if (response == null) {
             return new ResponseEntity<>("there is no user with that username", HttpStatus.BAD_REQUEST);
         } else {
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -104,7 +104,7 @@ public class SpotaController {
 
         String response = userDataService.getUsersByName(names);
 
-        if(response == null) {
+        if (response == null) {
             return new ResponseEntity<>("there is no user with that name", HttpStatus.BAD_REQUEST);
         } else {
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -116,9 +116,9 @@ public class SpotaController {
     public ResponseEntity<String> getNews(@PathVariable String email) throws IOException, InterruptedException {
         String response = userDataService.getNews(email);
 
-        if(response == null) {
+        if (response == null) {
             return new ResponseEntity<>("there is no news to get.", HttpStatus.BAD_REQUEST);
-        } else if(response == "user doesn't exist") {
+        } else if (response == "user doesn't exist") {
             return new ResponseEntity<>("user doesn't exist.", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -136,9 +136,9 @@ public class SpotaController {
     public ResponseEntity<String> getScores(@PathVariable String email) {
         String response = userDataService.getScores(email);
 
-        if(response == null) {
+        if (response == null) {
             return new ResponseEntity<>("there are no scores to get.", HttpStatus.BAD_REQUEST);
-        } else if(response == "user doesn't exist") {
+        } else if (response == "user doesn't exist") {
             return new ResponseEntity<>("user doesn't exist.", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -149,7 +149,7 @@ public class SpotaController {
     public ResponseEntity<String> getGeneralScores() throws IOException, InterruptedException {
         String response = userDataService.getGeneralScores();
 
-        if(response == null) {
+        if (response == null) {
             return new ResponseEntity<>("there are no scores to get.", HttpStatus.BAD_REQUEST);
         }
 
@@ -158,8 +158,8 @@ public class SpotaController {
 
     //request for signing up a new user account and adding them to DB
     @PostMapping(path = "/users/signUp",
-                 consumes = MediaType.APPLICATION_JSON_VALUE,
-                 produces = MediaType.APPLICATION_JSON_VALUE)
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> createUserAccount(@RequestBody String userAccount) {
         UserAccount newUser = null;
 
@@ -170,7 +170,7 @@ public class SpotaController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if(userDataService.addNewUserAccount(newUser)) {
+        if (userDataService.addNewUserAccount(newUser)) {
             return new ResponseEntity<>(gson.toJson(userAccount), HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>("user already exists in database", HttpStatus.BAD_REQUEST);
@@ -181,8 +181,8 @@ public class SpotaController {
     @PostMapping(path = "/users/addTeamSubscriptions/{email}")
     public ResponseEntity<String> addTeamSubscriptions(@RequestBody List<String> teamNames, @PathVariable String email) {
         try {
-            if(userDataService.userExists(email)) {
-                if(userDataService.addTeamsSubscription(email, teamNames)) {
+            if (userDataService.userExists(email)) {
+                if (userDataService.addTeamsSubscription(email, teamNames)) {
                     //successfully added team to user account subscription
                     return new ResponseEntity<>("successfully added teams", HttpStatus.OK);
                 } else {
@@ -202,8 +202,8 @@ public class SpotaController {
     @PostMapping(path = "/users/removeTeamSubscriptions/{email}")
     public ResponseEntity<String> removeTeamSubscription(@PathVariable List<String> teamNames, @PathVariable String email) {
         try {
-            if(userDataService.userExists(email)) {
-                if(userDataService.removeTeamsSubscription(email, teamNames)) {
+            if (userDataService.userExists(email)) {
+                if (userDataService.removeTeamsSubscription(email, teamNames)) {
                     //successfully added team to user account subscription
                     return new ResponseEntity<>("successfully removed the team", HttpStatus.OK);
                 } else {
@@ -223,12 +223,25 @@ public class SpotaController {
     @PostMapping(path = "/users/createGroupChat")
     public ResponseEntity<String> createGroupChat(@PathVariable GroupChat groupChat, @PathVariable String email) {
         try {
-            if(userDataService.userExists(email)) {
+            if (userDataService.userExists(email)) {
 
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return new ResponseEntity<String>("could not find user", HttpStatus.BAD_REQUEST);
+    }
+
+    //request for adding a user to another users friends list
+    @PostMapping(path = "/users/addFriend/{user}/{friend}")
+    public ResponseEntity<String> addFriend(@PathVariable String user, @PathVariable String friend) {
+        try {
+            if(userDataService.addFriend(user, friend)) {
+                return new ResponseEntity<>("successfully added user to friends list", HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>("unable to add user to friends list", HttpStatus.BAD_REQUEST);
     }
 }
