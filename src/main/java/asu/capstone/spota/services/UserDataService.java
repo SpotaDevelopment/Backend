@@ -169,7 +169,6 @@ public class UserDataService {
 
                 while (resultSet.next()) {
                     UserAccount user = new UserAccount();
-                    List<String> friendsList = getUserFriends(resultSet.getString("email"));
                     user.setEmail(resultSet.getString("email"));
                     user.setFirstName(resultSet.getString("firstname"));
                     user.setLastName(resultSet.getString("lastname"));
@@ -209,7 +208,6 @@ public class UserDataService {
 
                     while(resultSet.next()) {
                         UserAccount user = new UserAccount();
-                        List<String> friendsList = getUserFriends(resultSet.getString("email"));
                         user.setEmail(resultSet.getString("email"));
                         user.setFirstName(resultSet.getString("firstname"));
                         user.setLastName(resultSet.getString("lastname"));
@@ -241,7 +239,6 @@ public class UserDataService {
 
                 if(resultSet.next()) {
                     UserAccount user = new UserAccount();
-                    List<String> friendsList = getUserFriends(userEmail);
                     user.setEmail(userEmail);
                     user.setFirstName(resultSet.getString("firstname"));
                     user.setLastName(resultSet.getString("lastname"));
@@ -272,7 +269,6 @@ public class UserDataService {
 
                 if(resultSet.next()) {
                     UserAccount user = new UserAccount();
-                    List<String> friendsList = getUserFriends(resultSet.getString("email"));
                     user.setUsername(username);
                     user.setEmail(resultSet.getString("email"));
                     user.setFirstName(resultSet.getString("firstname"));
@@ -290,27 +286,33 @@ public class UserDataService {
         return null;
     }
 
-    public List<String> getUserFriends(String email) {
+    public String getUserFriends(String email) {
         if(!userExists(email)) {
             return null;
         } else {
             try(Connection dbc = DriverManager.getConnection(DB_URL, USER, PASS);
                 Statement stmt = dbc.createStatement();) {
-                String sqlQuery = String.format("SELECT * FROM hasFriend WHERE user1='%s';", email);
+                String sqlQuery = String.format("SELECT * FROM Users u WHERE u.email IN(SELECT f.user2 FROM hasfriend f WHERE f.user1='%s');", email);
 
                 ResultSet resultSet = stmt.executeQuery(sqlQuery);
 
-                List<String> friendsList = new ArrayList<>();
+                List<UserAccount> friendsList = new ArrayList<>();
 
                 while(resultSet.next()) {
-                    String friend = resultSet.getString("user2");
+                    UserAccount friend = new UserAccount();
+                    friend.setUsername(resultSet.getString("username"));
+                    friend.setEmail(resultSet.getString("email"));
+                    friend.setFirstName(resultSet.getString("firstname"));
+                    friend.setLastName(resultSet.getString("lastname"));
+                    friend.setBirthday(resultSet.getString("birthday"));
+                    friend.setProfile_color(resultSet.getString("profile_color"));
                     friendsList.add(friend);
                 }
-                return friendsList;
+                return gson.toJson(friendsList);
 
             } catch(SQLException e) {
                 System.out.println(e);
-                return null;
+                return "DB issue";
             }
         }
     }

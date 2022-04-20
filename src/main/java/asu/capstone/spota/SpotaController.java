@@ -1,5 +1,6 @@
 package asu.capstone.spota;
 
+import asu.capstone.spota.chatmodels.GroupChat;
 import asu.capstone.spota.model.*;
 import asu.capstone.spota.services.*;
 import com.google.gson.Gson;
@@ -41,6 +42,20 @@ public class SpotaController {
 
         return String.format("Hello %s!", name);
 	}
+
+    //request for getting a list of friends
+    @GetMapping(path = "/users/getFriends/{email}")
+    public ResponseEntity<String> getFriends(@PathVariable String email) {
+        String response = userDataService.getUserFriends(email);
+
+        if(response == "DB issue") {
+            return new ResponseEntity<>("There was an issue accessing the database", HttpStatus.BAD_REQUEST);
+        } else if(response == null) {
+            return new ResponseEntity<>("The user does not exist in the system", HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+    }
 
     //request for getting a list of users with matching prefix for the field column
     @GetMapping(path = "/users/getUsersByPrefix/{prefix}/{field}")
@@ -169,7 +184,7 @@ public class SpotaController {
             if(userDataService.userExists(email)) {
                 if(userDataService.addTeamsSubscription(email, teamNames)) {
                     //successfully added team to user account subscription
-                    return new ResponseEntity<>("successfully added team", HttpStatus.OK);
+                    return new ResponseEntity<>("successfully added teams", HttpStatus.OK);
                 } else {
                     //could not add team since team already exists in subscriptions
                     return new ResponseEntity<>("there was an error adding team to the database", HttpStatus.BAD_REQUEST);
@@ -201,6 +216,19 @@ public class SpotaController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new ResponseEntity<String>("could not parse user account", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<String>("could not find user", HttpStatus.BAD_REQUEST);
+    }
+
+    //request for creating a new group chat for a user
+    @PostMapping(path = "/users/createGroupChat")
+    public ResponseEntity<String> createGroupChat(@PathVariable GroupChat groupChat, @PathVariable String email) {
+        try {
+            if(userDataService.userExists(email)) {
+
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<String>("could not find user", HttpStatus.BAD_REQUEST);
     }
 }
