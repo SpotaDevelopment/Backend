@@ -447,20 +447,4 @@ public class UserDataService {
             return false;
         }
     }
-
-    public ResultSet queryDB(String sqlCommand) {
-        try (Connection dbc = DriverManager.getConnection(DB_URL, USER, PASS);
-             Statement stmt = dbc.createStatement();) {
-
-            //getting result set from DB
-            ResultSet resultSet = stmt.executeQuery(sqlCommand);
-
-            stmt.close();
-            return resultSet;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 }

@@ -1,4 +1,4 @@
-package asu.capstone.spota;
+package asu.capstone.spota.controllers;
 
 import asu.capstone.spota.chatmodels.GroupChat;
 import asu.capstone.spota.model.*;
