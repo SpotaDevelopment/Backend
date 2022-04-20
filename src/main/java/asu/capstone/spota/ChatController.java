@@ -34,9 +34,6 @@ public class ChatController {
     private String PASS;
 
     private static final Gson gson = new Gson();
-    Connection dbc = DriverManager.getConnection(DB_URL, USER, PASS);
-
-
 
     @Autowired private SimpMessagingTemplate messagingTemplate;
 
@@ -73,61 +70,34 @@ public class ChatController {
             call convertAndSendToUser method with userID, destination, and ChatNotification.
          */
 
-        Statement stmt = dbc.createStatement();
+        try {
+            Connection dbc = DriverManager.getConnection(DB_URL, USER, PASS);
+            Statement stmt = dbc.createStatement();
 
-        //query for returning all users who are part of the group chat that the message is for (not including the sender)
-        String sqlQuery = String.format("u.email, u.username, u.firstname, u.lastname, u.birthday, u.profile_color" +
-                "FROM Users u, groupchat gr, hasgroupchat h" +
-                "WHERE (u.email = h.email AND u.email != '%s') AND h.groupID=gr.groupID AND h.groupname=gr.groupname;", message.getSenderId());
+            //query for returning all users who are part of the group chat that the message is for (not including the sender)
+            String sqlQuery = String.format("u.email, u.username, u.firstname, u.lastname, u.birthday, u.profile_color" +
+                    "FROM Users u, groupchat gr, hasgroupchat h" +
+                    "WHERE (u.email = h.email AND u.email != '%s') AND h.groupID=gr.groupID AND h.groupname=gr.groupname;", message.getSenderId());
 
 
-        ResultSet resultSet = stmt.executeQuery(sqlQuery);
+            ResultSet resultSet = stmt.executeQuery(sqlQuery);
 
         /*iterating through each user in the group chat and sending the ChatMessage object as payload
           to the destination -> /users/username/messages
         */
-        while(resultSet.next()) {
-            messagingTemplate.convertAndSendToUser(
-                    message.getSenderId(),"messages",
-                    new ChatMessage(
-                            message.getMessageContent(),
-                            message.getSenderId(),
-                            message.getRecipientId(),
-                            message.getGroupChat()
-                    )
-            );
-        }
-
-        /*if(names.length == 1) {
-            sqlQuery = String.format("SELECT * FROM users WHERE firstname='%s' OR lastname='%s';", names[0]);
-        } else if(names.length == 2) {
-            sqlQuery = String.format("SELECT * FROM users WHERE firstname='%s' AND lastname='%s';", names[0], names[1]);
-        }
-
-        if(sqlQuery != null) {
-            ResultSet resultSet = stmt.executeQuery(sqlQuery);
-
-            while(resultSet.next()) {
-                UserAccount user = new UserAccount();
-                user.setEmail(resultSet.getString("email"));
-                user.setFirstName(resultSet.getString("firstname"));
-                user.setLastName(resultSet.getString("lastname"));
-                user.setUsername(resultSet.getString("username"));
-                user.setBirthday(resultSet.getString("birthday"));
-                user.setProfile_color(resultSet.getString("profile_color"));
-                users.add(user);
+            while (resultSet.next()) {
+                messagingTemplate.convertAndSendToUser(
+                        message.getSenderId(), "messages",
+                        new ChatMessage(
+                                message.getMessageContent(),
+                                message.getSenderId(),
+                                message.getRecipientId(),
+                                message.getGroupChat()
+                        )
+                );
             }
-        }*/
-
-        //sending the message to a recipient who is in the group chat of the message being processed
-        /*messagingTemplate.convertAndSendToUser(
-                message.getGroupChat(),recepient + "/messages",
-                new ChatMessage(
-                        message.getMessageContent(),
-                        message.getSenderId(),
-                        message.getRecipientId(),
-                        message.getGroupChat()
-                )
-        );*/
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
