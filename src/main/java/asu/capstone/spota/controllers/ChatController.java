@@ -105,9 +105,10 @@ public class ChatController {
                 );
             }
 
-
+            dbc.close(); //closing DB connection
 
         } catch(SQLException e) {
+            System.out.println("sql exception");
             e.printStackTrace();
         }
     }
