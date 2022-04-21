@@ -75,14 +75,14 @@ public class ChatController {
 
             //query for returning all users who are part of the group chat that the message is for (not including the sender)
             String sqlQuery = String.format(
-                    "SELECT u" +
-                    "FROM users u, group_chat gr, hasgroupchat h" +
-                    "WHERE (u.email != '%s'" +
-                    "AND h.groupcreator=gr.groupcreator" +
-                    "AND gr.groupcreator='%s'" +
-                    "AND h.groupname=gr.groupname" +
-                    "AND h.groupname='%s'" +
-                    "AND h.username=u.username" +
+                    "SELECT u " +
+                    "FROM users u, group_chat gr, hasgroupchat h " +
+                    "WHERE (u.email != '%s' " +
+                    "AND h.groupcreator=gr.groupcreator " +
+                    "AND gr.groupcreator='%s' " +
+                    "AND h.groupname=gr.groupname " +
+                    "AND h.groupname='%s' " +
+                    "AND h.username=u.username " +
                     "AND h.email=u.email);",
                     message.getSenderId(),
                     message.getSenderId(),
