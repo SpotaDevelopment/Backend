@@ -288,6 +288,7 @@ public class SpotaController {
         return new ResponseEntity<>("unable to remove user from friends list", HttpStatus.BAD_REQUEST);
     }
 
+    /*
     //request for getting all conversations for a user
     @GetMapping(path = "/users/getConversations")
     public ResponseEntity<String> getConversations(@RequestBody UserAccount user ) {
@@ -312,5 +313,5 @@ public class SpotaController {
             e.printStackTrace();
         }
         return new ResponseEntity<>("unable to upload the message", HttpStatus.BAD_REQUEST);
-    }
+    }*/
 }

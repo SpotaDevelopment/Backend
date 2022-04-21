@@ -6,14 +6,18 @@ import asu.capstone.spota.chatmodels.ChatNotification;
 import asu.capstone.spota.chatmodels.Greeting;
 import asu.capstone.spota.chatmodels.HelloMessage;
 import asu.capstone.spota.model.UserAccount;
+import asu.capstone.spota.services.ChatService;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
 import java.sql.*;
@@ -23,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@RestController
 public class ChatController {
     @Value("${spring.datasource.url}")
     private String DB_URL;
@@ -38,6 +43,8 @@ public class ChatController {
 
     @Autowired private SimpMessagingTemplate messagingTemplate;
 
+    @Autowired private ChatService chatService;
+
     public ChatController() {
 
     }
@@ -50,6 +57,33 @@ public class ChatController {
                 message
         );
     }
+
+    //request for getting all conversations for a user
+    @GetMapping(path = "/users/getConversations")
+    public ResponseEntity<String> getConversations(@RequestBody UserAccount user ) {
+        try {
+            String response = chatService.getConversations(user);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>("could not get conversations", HttpStatus.BAD_REQUEST);
+    }
+
+    //request for uploading a new chat to the database
+    @PostMapping(path = "/users/messages/saveMessage/{user}")
+    public ResponseEntity<String> saveMessage(@RequestBody ChatMessage message, @PathVariable String user) {
+        try {
+            if(chatService.saveMessage(message)) {
+                return new ResponseEntity<>("successfully uploaded the message", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("unable to upload the message", HttpStatus.BAD_REQUEST);
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>("unable to upload the message", HttpStatus.BAD_REQUEST);
+    }
+
 
     @MessageMapping("/message")
     @SendTo("/topic/messages")
