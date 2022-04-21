@@ -1,5 +1,6 @@
 package asu.capstone.spota.controllers;
 
+import asu.capstone.spota.chatmodels.ChatMessage;
 import asu.capstone.spota.chatmodels.GroupChat;
 import asu.capstone.spota.model.*;
 import asu.capstone.spota.services.*;
@@ -29,6 +30,9 @@ public class SpotaController {
 
     @Autowired
     private UserDataService userDataService;
+
+    @Autowired
+    private ChatService chatService;
 
     private static final Gson gson = new Gson();
 
@@ -269,5 +273,44 @@ public class SpotaController {
             e.printStackTrace();
         }
         return new ResponseEntity<>("unable to add user to friends list", HttpStatus.BAD_REQUEST);
+    }
+
+    //request for deleting a user from a users friends list
+    @PostMapping(path = "/users/removeFriend/{user}/{friend}")
+    public ResponseEntity<String> removeFriend(@PathVariable String user, @PathVariable String friend) {
+        try {
+            if(userDataService.removeFriend(user, friend)) {
+                return new ResponseEntity<>("successfully removed the user from friends list", HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>("unable to remove user from friends list", HttpStatus.BAD_REQUEST);
+    }
+
+    //request for getting all conversations for a user
+    @GetMapping(path = "/users/getConversations")
+    public ResponseEntity<String> getConversations(@RequestBody UserAccount user ) {
+        try {
+            String response = chatService.getConversations(user);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>("could not get conversations", HttpStatus.BAD_REQUEST);
+    }
+
+    //request for uploading a new chat to the database
+    @PostMapping(path = "/users/messages/saveMessage/{user}")
+    public ResponseEntity<String> saveMessage(@RequestBody ChatMessage message) {
+        try {
+            if(chatService.saveMessage(message)) {
+                return new ResponseEntity<>("successfully uploaded the message", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("unable to upload the message", HttpStatus.BAD_REQUEST);
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>("unable to upload the message", HttpStatus.BAD_REQUEST);
     }
 }

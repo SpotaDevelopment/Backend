@@ -94,7 +94,7 @@ public class UserDataService {
 
                 if(updateDB(addUsersToChatCommand)) {
                     System.out.println("calling sendNotification service from userDataService");
-                    chatController.sendNotification("testtt", "/messages", "added to group " + groupChatName);
+                    chatController.sendNotification(user2, "/messages", "added to group " + groupChatName);
                     return true;
                 } else {
                     System.out.println("couldn't add external user to group");
@@ -210,9 +210,13 @@ public class UserDataService {
     }
 
     public boolean addFriend(String user1, String user2) {
-        String sqlCommand = String.format("INSERT INTO hasFriend(user1, user2) values ('%s', '%s');",
+        String sqlCommand = String.format(
+                "INSERT INTO hasFriend(user1, user2) values ('%s', '%s');\n" +
+                "INSERT INTO hasFriend(user1, user2) values ('%s', '%s');",
                 user1,
-                user2);
+                user2,
+                user2,
+                user1);
         if(!updateDB(sqlCommand)) {
             return false;
         } else {
@@ -221,9 +225,12 @@ public class UserDataService {
     }
 
     public boolean removeFriend(String user1, String user2) {
-        String sqlCommand = String.format("DELETE FROM hasFriend WHERE user1='%s' AND user2='%s';",
+        String sqlCommand = String.format(
+                "DELETE FROM hasFriend WHERE (user1='%s' AND user2='%s') OR (user1='%s' AND user2='%s');",
                 user1,
-                user2);
+                user2,
+                user2,
+                user1);
         if(!updateDB(sqlCommand)) {
             return false;
         } else {
