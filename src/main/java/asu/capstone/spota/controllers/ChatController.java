@@ -48,6 +48,9 @@ public class ChatController {
     @Autowired
     private ChatService chatService;
 
+    @Autowired @Lazy
+    private UserDataService userDataService;
+
     public ChatController() {
 
     }
@@ -62,13 +65,15 @@ public class ChatController {
     }
 
     //request for getting all conversations for a user
-    @GetMapping(path = "/users/getConversations")
-    public ResponseEntity<String> getConversations(@RequestBody UserAccount user ) {
-        if(user == null) {
+    @GetMapping(path = "/users/getConversations/{user}")
+    public ResponseEntity<String> getConversations(@PathVariable String user) {
+        UserAccount userAccount = gson.fromJson(userDataService.getUserByEmail(user), UserAccount.class);
+
+        if(userAccount == null) {
             return new ResponseEntity<>("user account cannot be null", HttpStatus.BAD_REQUEST);
         }
         try {
-            String response = chatService.getConversations(user);
+            String response = chatService.getConversations(userAccount);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("could not get conversations", HttpStatus.BAD_REQUEST);
