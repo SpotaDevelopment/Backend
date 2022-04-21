@@ -93,7 +93,8 @@ public class UserDataService {
                         user2);
 
                 if(updateDB(addUsersToChatCommand)) {
-                    chatController.sendChatMessage("testtt", "/messages", "added to group " + groupChatName);
+                    System.out.println("calling sendNotification service from userDataService");
+                    chatController.sendNotification("testtt", "/messages", "added to group " + groupChatName);
                     return true;
                 } else {
                     System.out.println("couldn't add external user to group");

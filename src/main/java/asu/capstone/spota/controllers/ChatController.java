@@ -42,7 +42,8 @@ public class ChatController {
 
     }
 
-    public void sendChatMessage(String senderID, String destination, String message) {
+    public void sendNotification(String senderID, String destination, String message) {
+        System.out.println("sendNotification getting called by userDataService");
         this.messagingTemplate.convertAndSendToUser(
                 senderID,
                 destination,
@@ -98,7 +99,7 @@ public class ChatController {
                     message.getSenderId(),
                     message.getGroupChat());
 
-            System.out.println("SQL QUERY: " + sqlQuery);
+            //System.out.println("SQL QUERY: " + sqlQuery);
 
             ResultSet resultSet = stmt.executeQuery(sqlQuery);
 
