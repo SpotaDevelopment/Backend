@@ -39,7 +39,7 @@ public class ChatService {
 
             List<Conversation> conversationList = new ArrayList<>();
             String groupChatQuery = String.format(
-                    "SELECT * FROM hasgroupchat WHERE groupcreator='%s' OR email='%s' OR username='%s';)", user.getEmail(), user.getEmail(), user.getUsername());
+                    "SELECT * FROM hasgroupchat WHERE groupcreator='%s' OR email='%s' OR username='%s';", user.getEmail(), user.getEmail(), user.getUsername());
 
             ResultSet groupChatResults = stmt.executeQuery(groupChatQuery);
 
