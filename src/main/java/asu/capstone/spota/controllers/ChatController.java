@@ -88,6 +88,8 @@ public class ChatController {
                     message.getSenderId(),
                     message.getGroupChat());
 
+            System.out.println("SQL QUERY: " + sqlQuery);
+
             ResultSet resultSet = stmt.executeQuery(sqlQuery);
 
         /*iterating through each user in the group chat and sending the ChatMessage object as payload
