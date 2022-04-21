@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import asu.capstone.spota.chatmodels.GroupChat;
 import asu.capstone.spota.model.News;
 import asu.capstone.spota.model.NewsResult;
 import asu.capstone.spota.model.Game;
@@ -16,6 +17,7 @@ import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,6 +33,10 @@ public class UserDataService {
 
     @Autowired
     private NBAService nbaService;
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
 
     private static final Gson gson = new Gson();
 
@@ -78,14 +84,19 @@ public class UserDataService {
 
             if(updateDB(createChatCommand)) {
                 System.out.println("successfully created the group chat " + groupChatName);
-
-                String addUserToChatCommand = String.format("INSERT INTO hasgroupchat values('%s', '%s', '%s', '%s');",
+                String addUsersToChatCommand = String.format("" +
+                                "INSERT INTO hasgroupchat values('%s', '%s', '%s', '%s');",
                         groupChatName,
                         user1email,
                         user2email,
                         user2);
 
-                if(updateDB(addUserToChatCommand)) {
+                if(updateDB(addUsersToChatCommand)) {
+                    messagingTemplate.convertAndSendToUser(
+                            user1email,
+                            "messages",
+                            "testing messages sent in another service");
+
                     return true;
                 } else {
                     System.out.println("couldn't add external user to group");
