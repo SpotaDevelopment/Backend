@@ -35,7 +35,9 @@ public class ChatService {
 
     public String getConversations(UserAccount user) {
         try(Connection dbc = DriverManager.getConnection(DB_URL, USER, PASS);
-            Statement stmt = dbc.createStatement();) {
+            Statement stmt = dbc.createStatement();
+            Statement stmt2 = dbc.createStatement();
+            ) {
 
             List<Conversation> conversationList = new ArrayList<>();
             String groupChatQuery = String.format(
@@ -54,7 +56,7 @@ public class ChatService {
                         "SELECT * FROM conversations WHERE groupname='%s'", groupName
                 );
 
-                ResultSet messageResults = stmt.executeQuery(messageQuery);
+                ResultSet messageResults = stmt2.executeQuery(messageQuery);
 
                 while(messageResults.next()) {
                     ChatMessage chatMessage = new ChatMessage();
