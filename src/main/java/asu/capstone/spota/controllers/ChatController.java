@@ -35,9 +35,19 @@ public class ChatController {
 
     private static final Gson gson = new Gson();
 
+
     @Autowired private SimpMessagingTemplate messagingTemplate;
 
-    public ChatController() throws SQLException {
+    public ChatController() {
+
+    }
+
+    public void sendChatMessage(String senderID, String destination, String message) {
+        this.messagingTemplate.convertAndSendToUser(
+                senderID,
+                destination,
+                message
+        );
     }
 
     @MessageMapping("/message")
@@ -106,6 +116,8 @@ public class ChatController {
                         )
                 );
             }
+
+
 
             dbc.close(); //closing DB connection
 

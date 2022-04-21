@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import asu.capstone.spota.chatmodels.GroupChat;
+import asu.capstone.spota.controllers.ChatController;
 import asu.capstone.spota.model.News;
 import asu.capstone.spota.model.NewsResult;
 import asu.capstone.spota.model.Game;
@@ -35,7 +36,7 @@ public class UserDataService {
     private NBAService nbaService;
 
     @Autowired
-    private SimpMessagingTemplate messagingTemplate;
+    private ChatController chatController;
 
 
     private static final Gson gson = new Gson();
@@ -92,6 +93,7 @@ public class UserDataService {
                         user2);
 
                 if(updateDB(addUsersToChatCommand)) {
+                    chatController.sendChatMessage("testtt", "/messages", "added to group " + groupChatName);
                     return true;
                 } else {
                     System.out.println("couldn't add external user to group");
