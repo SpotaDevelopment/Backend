@@ -92,11 +92,6 @@ public class UserDataService {
                         user2);
 
                 if(updateDB(addUsersToChatCommand)) {
-                    messagingTemplate.convertAndSendToUser(
-                            user1email,
-                            "messages",
-                            "testing messages sent in another service");
-
                     return true;
                 } else {
                     System.out.println("couldn't add external user to group");
