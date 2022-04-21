@@ -74,11 +74,11 @@ public class ChatController {
         }
         try {
             String response = chatService.getConversations(userAccount);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("could not get conversations", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("there was an unexpected error", HttpStatus.BAD_REQUEST);
     }
 
     //request for uploading a new chat to the database
