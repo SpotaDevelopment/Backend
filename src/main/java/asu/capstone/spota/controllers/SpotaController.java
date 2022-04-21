@@ -301,7 +301,7 @@ public class SpotaController {
 
     //request for uploading a new chat to the database
     @PostMapping(path = "/users/messages/saveMessage/{user}")
-    public ResponseEntity<String> saveMessage(@RequestBody ChatMessage message) {
+    public ResponseEntity<String> saveMessage(@RequestBody ChatMessage message, @PathVariable String user) {
         try {
             if(chatService.saveMessage(message)) {
                 return new ResponseEntity<>("successfully uploaded the message", HttpStatus.OK);

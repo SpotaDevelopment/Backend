@@ -8,6 +8,7 @@ public class ChatMessage {
     private String senderId;
     private String recipientId;
     private String groupChat;
+    private String chatTimeStamp;
     private String chatId;
 
     public ChatMessage() {
