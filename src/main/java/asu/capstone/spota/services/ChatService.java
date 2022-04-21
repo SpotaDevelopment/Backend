@@ -63,7 +63,7 @@ public class ChatService {
                     chatMessage.setMessageContent(messageResults.getString("chatmessage"));
                     chatMessage.setGroupChat(messageResults.getString("groupname"));
                     chatMessage.setSenderId(messageResults.getString("senderid"));
-                    chatMessage.setChatTimeStamp(messageResults.getString("chatdate"));
+                    chatMessage.setChatTimeStamp(messageResults.getString("chattimestamp"));
                     messages.add(chatMessage);
                 }
                 conversation.setMessageList(messages);
