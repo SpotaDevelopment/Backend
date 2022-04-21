@@ -234,12 +234,24 @@ public class SpotaController {
     }
 
     //request for creating a new group chat for a user
-    @PostMapping(path = "/users/createGroupChat")
-    public ResponseEntity<String> createGroupChat(@PathVariable GroupChat groupChat, @PathVariable String email) {
-        try {
-            if (userDataService.userExists(email)) {
+    @PostMapping(path = "/users/createGroupChat/{groupChatName}/{user1email}/{user2}")
+    public ResponseEntity<String> createGroupChat(@PathVariable String groupChatName, @PathVariable String user1email, @PathVariable String user2) {
+        UserAccount user2account = gson.fromJson(userDataService.getUserByUsername(user2), UserAccount.class);
+        if(user2account == null)
+            return new ResponseEntity<>("user being requested to add does not exist in the system", HttpStatus.BAD_REQUEST);
 
+        try {
+            if (!userDataService.userExists(user1email)) {
+               return new ResponseEntity<>("user creating the groupchat does not exist in the system", HttpStatus.BAD_REQUEST);
+            } else {
+                String user2email = user2account.getEmail();
+                if(userDataService.createGroupChat(groupChatName, user1email, user2email, user2)) {
+                    return new ResponseEntity<>("successfully created the group chat", HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>("unable to create group chat", HttpStatus.BAD_REQUEST);
+                }
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -56,8 +56,7 @@ public class ChatController {
 
     @MessageMapping("/chat")
     public void processMessage(@Payload ChatMessage message) throws SQLException {
-
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy");
         LocalDateTime now = LocalDateTime.now();
         String messageDate = dtf.format(now);
         System.out.println(dtf.format(now)); //printing the time of the message
@@ -75,9 +74,12 @@ public class ChatController {
             Statement stmt = dbc.createStatement();
 
             //query for returning all users who are part of the group chat that the message is for (not including the sender)
-            String sqlQuery = String.format("u.email, u.username, u.firstname, u.lastname, u.birthday, u.profile_color" +
-                    "FROM Users u, groupchat gr, hasgroupchat h" +
-                    "WHERE (u.email = h.email AND u.email != '%s') AND h.groupID=gr.groupID AND h.groupname=gr.groupname;", message.getSenderId());
+            String sqlQuery = String.format("SELECT u.email, u.username, u.firstname, u.lastname, u.birthday, u.profile_color" +
+                    "FROM Users u, group_chat gr, hasgroupchat h" +
+                    "WHERE (u.email = h.email AND u.email != '%s') " +
+                    "AND h.groupcreator=gr.groupcreator " +
+                    "AND h.groupname=gr.groupname" +
+                    "AND h.username=u.username;", message.getSenderId());
 
 
             ResultSet resultSet = stmt.executeQuery(sqlQuery);

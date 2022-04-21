@@ -2,6 +2,8 @@ package asu.capstone.spota.services;
 
 import java.io.IOException;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,6 +62,43 @@ public class UserDataService {
         }
     }
 
+    //request for creating a new group chat with 2 users
+    public boolean createGroupChat(String groupChatName, String user1email, String user2email, String user2) {
+        if(user1email == null || user2 == null) {
+            return false;
+        } else {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+            LocalDateTime now = LocalDateTime.now();
+            String dateCreated = dtf.format(now);
+
+            String createChatCommand = String.format("INSERT INTO group_chat values ('%s', '%s', '%s');",
+                    groupChatName,
+                    user1email,
+                    dateCreated);
+
+            if(updateDB(createChatCommand)) {
+                System.out.println("successfully created the group chat " + groupChatName);
+
+                String addUserToChatCommand = String.format("INSERT INTO hasgroupchat values('%s', '%s', '%s', '%s');",
+                        groupChatName,
+                        user1email,
+                        user2email,
+                        user2);
+
+                if(updateDB(createChatCommand)) {
+                    return true;
+                } else {
+                    System.out.println("couldn't add external user to group");
+                    return false;
+                }
+
+            } else {
+                System.out.println("couldn't create group chat in the DB");
+                return false;
+            }
+        }
+    }
+
     //used to check if a user account exists in the DB
     public boolean userExists(String email) {
         try (Connection dbc = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -110,7 +149,9 @@ public class UserDataService {
     //adds a team to a users team subscription list
     public boolean addTeamsSubscription(String email, List<String> teamNames) {
         for(String teamName : teamNames) {
-            String sqlCommand = String.format("INSERT INTO hasTeamSubscription (email, teamName) values ('%s', '%s');", email, teamName);
+            String sqlCommand = String.format("INSERT INTO hasTeamSubscription (email, teamName) values ('%s', '%s');",
+                    email,
+                    teamName);
             if (!updateDB(sqlCommand)) {
                 return false;
             }
@@ -121,7 +162,9 @@ public class UserDataService {
     //removes a team from a users team subscription list
     public boolean removeTeamsSubscription(String email, List<String> teamNames) {
         for(String teamName: teamNames) {
-            String sqlCommand = String.format("DELETE FROM hasTeamSubscription WHERE email='%s' AND teamName='%s';", email, teamName);
+            String sqlCommand = String.format("DELETE FROM hasTeamSubscription WHERE email='%s' AND teamName='%s';",
+                    email,
+                    teamName);
             if (!updateDB(sqlCommand)) {
                 return false;
             }
@@ -153,7 +196,9 @@ public class UserDataService {
     }
 
     public boolean addFriend(String user1, String user2) {
-        String sqlCommand = String.format("INSERT INTO hasFriend(user1, user2) values ('%s', '%s');", user1, user2);
+        String sqlCommand = String.format("INSERT INTO hasFriend(user1, user2) values ('%s', '%s');",
+                user1,
+                user2);
         if(!updateDB(sqlCommand)) {
             return false;
         } else {
@@ -162,7 +207,9 @@ public class UserDataService {
     }
 
     public boolean removeFriend(String user1, String user2) {
-        String sqlCommand = String.format("DELETE FROM hasFriend WHERE user1='%s' AND user2='%s';", user1, user2);
+        String sqlCommand = String.format("DELETE FROM hasFriend WHERE user1='%s' AND user2='%s';",
+                user1,
+                user2);
         if(!updateDB(sqlCommand)) {
             return false;
         } else {
