@@ -89,6 +89,11 @@ public class UserDataService {
                     return true;
                 } else {
                     System.out.println("couldn't add external user to group");
+
+                    String removeGroupChatCommand = String.format("DELETE FROM group_chat WHERE groupname='%s' AND groupcreator='%s');",
+                            groupChatName,
+                            user1email);
+
                     return false;
                 }
 
