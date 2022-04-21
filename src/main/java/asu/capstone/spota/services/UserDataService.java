@@ -85,7 +85,7 @@ public class UserDataService {
                         user2email,
                         user2);
 
-                if(updateDB(createChatCommand)) {
+                if(updateDB(addUserToChatCommand)) {
                     return true;
                 } else {
                     System.out.println("couldn't add external user to group");
