@@ -6,6 +6,7 @@ import asu.capstone.spota.model.UserAccount;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.sql.*;
@@ -27,7 +28,7 @@ public class ChatService {
     @Autowired
     private NBAService nbaService;
 
-    @Autowired
+    @Autowired @Lazy
     private UserDataService userDataService;
 
     private static final Gson gson = new Gson();

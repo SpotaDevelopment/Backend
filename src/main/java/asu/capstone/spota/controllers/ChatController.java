@@ -11,6 +11,7 @@ import asu.capstone.spota.services.UserDataService;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -44,7 +45,8 @@ public class ChatController {
 
     @Autowired private SimpMessagingTemplate messagingTemplate;
 
-    @Autowired private ChatService chatService;
+    @Autowired
+    private ChatService chatService;
 
     public ChatController() {
 
