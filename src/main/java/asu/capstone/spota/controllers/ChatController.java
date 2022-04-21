@@ -46,8 +46,6 @@ public class ChatController {
 
     @Autowired private ChatService chatService;
 
-    @Autowired private UserDataService userDataService;
-
     public ChatController() {
 
     }
@@ -67,15 +65,11 @@ public class ChatController {
         if(user == null) {
             return new ResponseEntity<>("user account cannot be null", HttpStatus.BAD_REQUEST);
         }
-        else if(userDataService.userExists(user.getEmail())) {
-            try {
-                String response = chatService.getConversations(user);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return new ResponseEntity<>("could not get conversations", HttpStatus.BAD_REQUEST);
-            }
-        } else {
-            return new ResponseEntity<>("user does not exist in DB", HttpStatus.BAD_REQUEST);
+        try {
+            String response = chatService.getConversations(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("could not get conversations", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("there was an unexpected error", HttpStatus.BAD_REQUEST);
     }
