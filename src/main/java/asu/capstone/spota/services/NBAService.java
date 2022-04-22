@@ -60,46 +60,55 @@ public class NBAService {
         String line;
         StringBuffer responseContent = new StringBuffer();
 
-        String endpoint = String.format("https://stats.nba.com/stats/scoreboardv2?DayOffset=0&GameDate=%s&LeagueID=00", scoresDate);
-        System.out.println(endpoint);
+        try {
+            String endpoint = String.format("https://stats.nba.com/stats/scoreboardv2?DayOffset=0&GameDate=%s&LeagueID=00", scoresDate);
+            System.out.println(endpoint);
 
-        //creating a proxy connection
-        URL weburl = new URL(endpoint);
-        Proxy webProxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("137.184.0.205", 3128));
-        HttpURLConnection webProxyConnection = (HttpURLConnection) weburl.openConnection(webProxy);
-        webProxyConnection.usingProxy();
+            //creating a proxy connection
+            URL weburl = new URL(endpoint);
+            Proxy webProxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("137.184.0.205", 3128));
+            HttpURLConnection webProxyConnection = (HttpURLConnection) weburl.openConnection(webProxy);
+            //webProxyConnection.usingProxy();
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(endpoint))
-                .method("GET", HttpRequest.BodyPublishers.noBody())
-                .header("Referer", "http://stats.nba.com/scores")
-                .build();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(endpoint))
+                    .method("GET", HttpRequest.BodyPublishers.noBody())
+                    .header("Referer", "http://stats.nba.com/scores")
+                    .build();
 
-        webProxyConnection.setRequestMethod("GET");
-        webProxyConnection.setConnectTimeout(30000);
-        webProxyConnection.setReadTimeout(30000);
+            webProxyConnection.setRequestMethod("GET");
+            webProxyConnection.setConnectTimeout(30000);
+            webProxyConnection.setReadTimeout(30000);
 
-        int status = webProxyConnection.getResponseCode();
+            int status = webProxyConnection.getResponseCode();
 
-        if (status > 299) {
-            reader = new BufferedReader(new InputStreamReader(webProxyConnection.getErrorStream()));
-        } else {
-            reader = new BufferedReader(new InputStreamReader(webProxyConnection.getInputStream()));
+            if (status > 299) {
+                System.out.println("status was above 200");
+                reader = new BufferedReader(new InputStreamReader(webProxyConnection.getErrorStream()));
+            } else {
+                System.out.println("status was successful");
+                reader = new BufferedReader(new InputStreamReader(webProxyConnection.getInputStream()));
+            }
+            while ((line = reader.readLine()) != null) {
+                responseContent.append(line);
+            }
+            reader.close();
+
+            String response = responseContent.toString();
+            System.out.println(response);
+            //HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+
+            ScoreBoard scoreBoard = gson.fromJson(response, ScoreBoard.class);
+            webProxyConnection.disconnect();
+
+            return scoreBoard;
+
+        } catch(MalformedURLException e) {
+            System.out.println("Malformed URL");
+        } catch(IOException e) {
+            System.out.println("IO exception");
         }
-        while((line = reader.readLine()) != null) {
-            responseContent.append(line);
-        }
-        reader.close();
-
-        String response = responseContent.toString();
-        System.out.println(response);
-        //HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-
-        ScoreBoard scoreBoard = gson.fromJson(response, ScoreBoard.class);
-
-        webProxyConnection.disconnect();
-
-        return scoreBoard;
+        return null;
     }
 
 
