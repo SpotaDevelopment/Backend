@@ -63,10 +63,6 @@ public class ChatController {
                 message
         );
     }
-    //request for getting all chat messages for a group chat
-    @GetMapping(path = "/")
-
-
 
     //request for getting all conversations for a user
     @GetMapping(path = "/users/getConversations/{user}")
