@@ -53,8 +53,11 @@ public class SpotaController {
     //request for getting NBA live scores
     @GetMapping(path = "/nba/getGameScores")
     public ResponseEntity<String> getGameScores() throws IOException, InterruptedException {
+        System.out.println("calling the nba service get game scores");
         ScoreBoard scoreBoard = nbaService.getGameScores();
         String response = gson.toJson(scoreBoard, ScoreBoard.class);
+
+        System.out.println("Response in Spota Controller: " + response);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

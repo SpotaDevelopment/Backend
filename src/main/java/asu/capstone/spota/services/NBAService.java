@@ -54,7 +54,8 @@ public class NBAService {
         String scoresDate = dtf.format(localTime);
         System.out.println("scores Date: " + scoresDate);
 
-        String endpoint = String.format("https://stats.nba.com/stats/scoreboardv2?DayOffset=0&GameDate=%s&LeagueID=00", scoresDate);
+        String endpoint = String.format("https://stats.nba.com/stats/scoreboardv2?DayOffset=0&GameDate=2022-04-21&LeagueID=00");
+        //String endpoint = String.format("https://stats.nba.com/stats/scoreboardv2?DayOffset=0&GameDate=%s&LeagueID=00", scoresDate);
         System.out.println(endpoint);
 
 
