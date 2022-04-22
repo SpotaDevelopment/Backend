@@ -96,6 +96,32 @@ public class ChatController {
         return new ResponseEntity<>("unable to upload the message", HttpStatus.BAD_REQUEST);
     }
 
+    //request for creating a new group chat for a user
+    @PostMapping(path = "/users/createGroupChat/{groupChatName}/{user1email}/{user2}")
+    public ResponseEntity<String> createGroupChat(@PathVariable String groupChatName, @PathVariable String user1email, @PathVariable String user2) {
+        UserAccount user2account = gson.fromJson(userDataService.getUserByUsername(user2), UserAccount.class);
+        if(user2account == null)
+            return new ResponseEntity<>("user being requested to add does not exist in the system", HttpStatus.BAD_REQUEST);
+
+        try {
+            if (!userDataService.userExists(user1email)) {
+                return new ResponseEntity<>("user creating the groupchat does not exist in the system", HttpStatus.BAD_REQUEST);
+            } else {
+                String user2email = user2account.getEmail();
+                if(userDataService.createGroupChat(groupChatName, user1email, user2email, user2)) {
+                    return new ResponseEntity<>("successfully created the group chat", HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>("unable to create group chat", HttpStatus.BAD_REQUEST);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<String>("could not find user", HttpStatus.BAD_REQUEST);
+    }
+
+
 
     @MessageMapping("/message")
     @SendTo("/topic/messages")
@@ -122,9 +148,6 @@ public class ChatController {
 
         /*TODO -> first verify that the sender is a part of the group chat that is in the message body */
 
-        /*TODO -> get all users who are in the group defined in the message and for each user
-            call convertAndSendToUser method with userID, destination, and ChatNotification.
-         */
 
         try {
             Connection dbc = DriverManager.getConnection(DB_URL, USER, PASS);

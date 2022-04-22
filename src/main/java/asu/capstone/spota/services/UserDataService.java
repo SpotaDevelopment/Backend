@@ -118,7 +118,6 @@ public class UserDataService {
         try (Connection dbc = DriverManager.getConnection(DB_URL, USER, PASS);
              Statement stmt = dbc.createStatement();) {
             String sqlQuery = String.format("SELECT * FROM Users WHERE email= '%s';", email);
-            System.out.println(sqlQuery);
 
             //getting result set from DB
             ResultSet resultSet = stmt.executeQuery(sqlQuery);

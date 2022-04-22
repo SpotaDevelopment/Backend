@@ -237,31 +237,6 @@ public class SpotaController {
         return new ResponseEntity<String>("could not find user", HttpStatus.BAD_REQUEST);
     }
 
-    //request for creating a new group chat for a user
-    @PostMapping(path = "/users/createGroupChat/{groupChatName}/{user1email}/{user2}")
-    public ResponseEntity<String> createGroupChat(@PathVariable String groupChatName, @PathVariable String user1email, @PathVariable String user2) {
-        UserAccount user2account = gson.fromJson(userDataService.getUserByUsername(user2), UserAccount.class);
-        if(user2account == null)
-            return new ResponseEntity<>("user being requested to add does not exist in the system", HttpStatus.BAD_REQUEST);
-
-        try {
-            if (!userDataService.userExists(user1email)) {
-               return new ResponseEntity<>("user creating the groupchat does not exist in the system", HttpStatus.BAD_REQUEST);
-            } else {
-                String user2email = user2account.getEmail();
-                if(userDataService.createGroupChat(groupChatName, user1email, user2email, user2)) {
-                    return new ResponseEntity<>("successfully created the group chat", HttpStatus.OK);
-                } else {
-                    return new ResponseEntity<>("unable to create group chat", HttpStatus.BAD_REQUEST);
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new ResponseEntity<String>("could not find user", HttpStatus.BAD_REQUEST);
-    }
-
     //request for adding a user to another users friends list
     @PostMapping(path = "/users/addFriend/{user}/{friend}")
     public ResponseEntity<String> addFriend(@PathVariable String user, @PathVariable String friend) {
@@ -287,32 +262,4 @@ public class SpotaController {
         }
         return new ResponseEntity<>("unable to remove user from friends list", HttpStatus.BAD_REQUEST);
     }
-
-
-    /*
-    //request for getting all conversations for a user
-    @GetMapping(path = "/users/getConversations")
-    public ResponseEntity<String> getConversations(@RequestBody UserAccount user ) {
-        try {
-            String response = chatService.getConversations(user);
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        return new ResponseEntity<>("could not get conversations", HttpStatus.BAD_REQUEST);
-    }
-
-    //request for uploading a new chat to the database
-    @PostMapping(path = "/users/messages/saveMessage/{user}")
-    public ResponseEntity<String> saveMessage(@RequestBody ChatMessage message, @PathVariable String user) {
-        try {
-            if(chatService.saveMessage(message)) {
-                return new ResponseEntity<>("successfully uploaded the message", HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("unable to upload the message", HttpStatus.BAD_REQUEST);
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        return new ResponseEntity<>("unable to upload the message", HttpStatus.BAD_REQUEST);
-    }*/
 }
