@@ -62,6 +62,7 @@ public class NBAService {
                 .uri(URI.create(uri))
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .header("Referer", "http://stats.nba.com/scores")
+                .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36")
                 .build();
         HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 
