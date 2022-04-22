@@ -53,6 +53,7 @@ public class NBAService {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(String.format("https://stats.nba.com/stats/scoreboardv2?DayOffset=0&GameDate=%s&LeagueID=00", scoresDate)))
                 .method("GET", HttpRequest.BodyPublishers.noBody())
+                .header("Referer", "http://stats.nba.com/scores")
                 .build();
         HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 
