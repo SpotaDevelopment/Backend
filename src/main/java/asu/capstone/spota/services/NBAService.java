@@ -13,6 +13,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -49,8 +50,7 @@ public class NBAService {
 
     public ScoreBoard getGameScores() throws IOException, InterruptedException {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDateTime localNow = LocalDateTime.now();
-        ZonedDateTime localTime = localNow.atZone(ZoneId.of("GMT-7"));
+        LocalDate localTime = LocalDate.now(ZoneId.of("GMT-7"));
         String scoresDate = dtf.format(localTime);
         System.out.println("scores Date: " + scoresDate);
 
