@@ -32,6 +32,9 @@ public class SpotaController {
     private UserDataService userDataService;
 
     @Autowired
+    private NBAService nbaService;
+
+    @Autowired
     private ChatService chatService;
 
     private static final Gson gson = new Gson();
@@ -45,6 +48,15 @@ public class SpotaController {
     public String hello(@PathVariable String name) {
 
         return String.format("Hello %s!", name);
+    }
+
+    //request for getting NBA live scores
+    @GetMapping(path = "/nba/getGameScores")
+    public ResponseEntity<String> getGameScores() throws IOException, InterruptedException {
+        ScoreBoard scoreBoard = nbaService.getGameScores();
+        String response = gson.toJson(scoreBoard, ScoreBoard.class);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     //request for getting a list of friends

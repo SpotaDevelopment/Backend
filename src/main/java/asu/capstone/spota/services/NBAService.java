@@ -13,6 +13,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -41,6 +43,22 @@ public class NBAService {
             return "";
         }
         return image;
+    }
+
+    public ScoreBoard getGameScores() throws IOException, InterruptedException {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime now = LocalDateTime.now();
+        String scoresDate = dtf.format(now);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(String.format("https://stats.nba.com/stats/scoreboardv2?DayOffset=0&GameDate=%s&LeagueID=00", scoresDate)))
+                .method("GET", HttpRequest.BodyPublishers.noBody())
+                .build();
+        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+
+        ScoreBoard scoreBoard = gson.fromJson(response.body(), ScoreBoard.class);
+
+        return scoreBoard;
     }
 
 
