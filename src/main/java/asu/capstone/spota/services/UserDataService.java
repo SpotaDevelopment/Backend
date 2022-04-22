@@ -51,14 +51,25 @@ public class UserDataService {
         if(userAccount == null) {
             System.out.println("error: user account is null");
         }
-       String sqlCommand = String.format("INSERT INTO Users (email, username, firstName, lastName, birthday, profile_color)" +
-                                         "values ('%s','%s', '%s', '%s', '%s', '%s');",
-                                            userAccount.getEmail(),
-                                            userAccount.getUsername(),
-                                            userAccount.getFirstName(),
-                                            userAccount.getLastName(),
-                                            userAccount.getBirthday(),
-                                            userAccount.getProfile_color());
+
+        String sqlCommand = "";
+
+        if(userAccount.getBirthday().equals("") || userAccount.getBirthday() == null) {
+            sqlCommand = String.format("INSERT INTO Users (email, username, firstName, lastName, profile_color) values ('%s', '%s', '%s', '%s', '%s');",
+                    userAccount.getEmail(),
+                    userAccount.getUsername(),
+                    userAccount.getFirstName(),
+                    userAccount.getLastName(),
+                    userAccount.getProfile_color());
+        } else {
+            sqlCommand = String.format("INSERT INTO Users (email, username, firstName, lastName, birthday, profile_color) values ('%s','%s', '%s', '%s', '%s', '%s');",
+                    userAccount.getEmail(),
+                    userAccount.getUsername(),
+                    userAccount.getFirstName(),
+                    userAccount.getLastName(),
+                    userAccount.getBirthday(),
+                    userAccount.getProfile_color());
+        }
 
         if(updateDB(sqlCommand)) {
             System.out.println("successfully added new userAccount to DB");
@@ -124,10 +135,10 @@ public class UserDataService {
 
             if (resultSet.next()) {
                 //user exists in DB
-                System.out.println("user exists");
+                //System.out.println("user exists");
                 return true;
             } else {
-                System.out.println("user doesn't exist");
+                //System.out.println("user doesn't exist");
                 return false;
             }
         } catch(Exception e) {
@@ -147,10 +158,10 @@ public class UserDataService {
 
             if (resultSet.next()) {
                 //user exists in DB
-                System.out.println("user exists");
+                //System.out.println("user exists");
                 return true;
             } else {
-                System.out.println("user doesn't exist");
+                //System.out.println("user doesn't exist");
                 return false;
             }
         } catch(Exception e) {
