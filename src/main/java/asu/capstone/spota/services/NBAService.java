@@ -49,9 +49,14 @@ public class NBAService {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime now = LocalDateTime.now();
         String scoresDate = dtf.format(now);
+        System.out.println("scores Date: " + scoresDate);
+
+        String uri = String.format("https://stats.nba.com/stats/scoreboardv2?DayOffset=0&GameDate=%s&LeagueID=00", scoresDate);
+        System.out.println(uri);
+
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(String.format("https://stats.nba.com/stats/scoreboardv2?DayOffset=0&GameDate=%s&LeagueID=00", scoresDate)))
+                .uri(URI.create(uri))
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .header("Referer", "http://stats.nba.com/scores")
                 .build();
