@@ -7,7 +7,9 @@ import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.*;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -54,6 +56,10 @@ public class NBAService {
         String scoresDate = dtf.format(localTime);
         System.out.println("scores Date: " + scoresDate);
 
+        BufferedReader reader;
+        String line;
+        StringBuffer responseContent = new StringBuffer();
+
         String endpoint = String.format("https://stats.nba.com/stats/scoreboardv2?DayOffset=0&GameDate=%s&LeagueID=00", scoresDate);
         System.out.println(endpoint);
 
@@ -69,9 +75,31 @@ public class NBAService {
                 .header("Referer", "http://stats.nba.com/scores")
                 .build();
 
-        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+        webProxyConnection.setRequestMethod("GET");
+        webProxyConnection.setConnectTimeout(30000);
+        webProxyConnection.setReadTimeout(30000);
 
-        ScoreBoard scoreBoard = gson.fromJson(response.body(), ScoreBoard.class);
+        int status = webProxyConnection.getResponseCode();
+
+        if(status > 299) {
+            reader = new BufferedReader(new InputStreamReader(webProxyConnection.getErrorStream()));
+            while((line = reader.readLine()) != null) {
+                responseContent.append(line);
+            }
+            reader.close();
+        } else {
+            reader = new BufferedReader(new InputStreamReader(webProxyConnection.getInputStream()));
+            while((line = reader.readLine()) != null) {
+                responseContent.append(line);
+            }
+            reader.close();
+        }
+
+        String response = responseContent.toString();
+        System.out.println(response);
+        //HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+
+        ScoreBoard scoreBoard = gson.fromJson(response, ScoreBoard.class);
 
         webProxyConnection.disconnect();
 

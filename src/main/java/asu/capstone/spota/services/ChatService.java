@@ -2,6 +2,7 @@ package asu.capstone.spota.services;
 
 import asu.capstone.spota.chatmodels.ChatMessage;
 import asu.capstone.spota.chatmodels.Conversation;
+import asu.capstone.spota.controllers.ChatController;
 import asu.capstone.spota.model.UserAccount;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class ChatService {
 
     @Autowired
     private NBAService nbaService;
+
+    @Autowired @Lazy
+    private ChatController chatController;
 
     @Autowired @Lazy
     private UserDataService userDataService;
@@ -85,6 +89,7 @@ public class ChatService {
                 message.getGroupChat(),
                 message.getSenderId()
         );
+
 
         if(userDataService.updateDB(sqlCommand)) {
             return true;
