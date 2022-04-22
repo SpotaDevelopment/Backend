@@ -67,6 +67,8 @@ public class NBAService {
 
         ScoreBoard scoreBoard = gson.fromJson(response.body(), ScoreBoard.class);
 
+        System.out.println("Score Board: " + scoreBoard);
+
         return scoreBoard;
     }
 
