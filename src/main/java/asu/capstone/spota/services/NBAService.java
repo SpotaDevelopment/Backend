@@ -68,7 +68,10 @@ public class NBAService {
             URL weburl = new URL(endpoint);
             Proxy webProxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("137.184.0.205", 3128));
             HttpURLConnection webProxyConnection = (HttpURLConnection) weburl.openConnection(webProxy);
-            //webProxyConnection.usingProxy();
+
+            if(webProxyConnection.usingProxy()) {
+                System.out.println("using proxy server");
+            }
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(endpoint))
