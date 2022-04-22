@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.net.URI;
+import java.net.*;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -57,15 +57,23 @@ public class NBAService {
         String endpoint = String.format("https://stats.nba.com/stats/scoreboardv2?DayOffset=0&GameDate=%s&LeagueID=00", scoresDate);
         System.out.println(endpoint);
 
+        //creating a proxy connection
+        URL weburl = new URL(endpoint);
+        Proxy webProxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("137.184.0.205", 3128));
+        HttpURLConnection webProxyConnection = (HttpURLConnection) weburl.openConnection(webProxy);
+        webProxyConnection.usingProxy();
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(endpoint))
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .header("Referer", "http://stats.nba.com/scores")
                 .build();
+
         HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 
         ScoreBoard scoreBoard = gson.fromJson(response.body(), ScoreBoard.class);
+
+        webProxyConnection.disconnect();
 
         return scoreBoard;
     }
