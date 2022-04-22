@@ -63,6 +63,10 @@ public class ChatController {
                 message
         );
     }
+    //request for getting all chat messages for a group chat
+    @GetMapping(path = "/")
+
+
 
     //request for getting all conversations for a user
     @GetMapping(path = "/users/getConversations/{user}")
@@ -120,7 +124,6 @@ public class ChatController {
         }
         return new ResponseEntity<String>("could not find user", HttpStatus.BAD_REQUEST);
     }
-
 
 
     @MessageMapping("/message")

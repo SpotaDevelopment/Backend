@@ -54,8 +54,7 @@ public class NBAService {
         String scoresDate = dtf.format(localTime);
         System.out.println("scores Date: " + scoresDate);
 
-        String endpoint = String.format("https://stats.nba.com/stats/scoreboardv2?DayOffset=0&GameDate=2022-04-21&LeagueID=00");
-        //String endpoint = String.format("https://stats.nba.com/stats/scoreboardv2?DayOffset=0&GameDate=%s&LeagueID=00", scoresDate);
+        String endpoint = String.format("https://stats.nba.com/stats/scoreboardv2?DayOffset=0&GameDate=%s&LeagueID=00", scoresDate);
         System.out.println(endpoint);
 
 
@@ -63,15 +62,10 @@ public class NBAService {
                 .uri(URI.create(endpoint))
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .header("Referer", "http://stats.nba.com/scores")
-                //.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36")
                 .build();
         HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 
-        System.out.println("Response: " + response);
-
         ScoreBoard scoreBoard = gson.fromJson(response.body(), ScoreBoard.class);
-
-        System.out.println("Score Board: " + scoreBoard);
 
         return scoreBoard;
     }

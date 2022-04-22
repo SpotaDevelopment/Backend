@@ -46,6 +46,25 @@ public class UserDataService {
 
     }
 
+    public boolean addNewUserAccounts(List<UserAccount> userAccounts) {
+        String sqlCommand = "";
+        for(UserAccount user : userAccounts) {
+            sqlCommand += String.format("\nINSERT INTO Users (email, username, firstName, lastName, profile_color) values ('%s', '%s', '%s', '%s', '%s');",
+                user.getEmail(),
+                    user.getUsername(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getProfile_color());
+        }
+        if(updateDB(sqlCommand)) {
+            System.out.println("successfully added new userAccount to DB");
+            return true;
+        } else {
+            System.out.println("couldn't add user to DB");
+            return false;
+        }
+    }
+
     //this method adds a new user account to the DB and should be called after user account creation
     public boolean addNewUserAccount(UserAccount userAccount) {
         if(userAccount == null) {

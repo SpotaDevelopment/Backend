@@ -41,7 +41,7 @@ public class SpotaController {
 
     @GetMapping("/")
     String helloWorld() {
-        return "Hello World";
+        return "Hello from Spota!";
     }
 
     @GetMapping(value = "/hello/{name}")
@@ -53,11 +53,8 @@ public class SpotaController {
     //request for getting NBA live scores
     @GetMapping(path = "/nba/getGameScores")
     public ResponseEntity<String> getGameScores() throws IOException, InterruptedException {
-        System.out.println("calling the nba service get game scores");
         ScoreBoard scoreBoard = nbaService.getGameScores();
         String response = gson.toJson(scoreBoard, ScoreBoard.class);
-
-        System.out.println("Response in Spota Controller: " + response);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -207,6 +204,19 @@ public class SpotaController {
             return new ResponseEntity<>(gson.toJson(userAccount), HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>("user already exists in database", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+    //request for signing up a list of users
+    @PostMapping(path = "/users/signUpMany",
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> createUserAccounts(@RequestBody List<UserAccount> userAccounts) {
+        if(userDataService.addNewUserAccounts(userAccounts)) {
+            return new ResponseEntity<>("successfully added everyone!", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("couldnt do it :(", HttpStatus.BAD_REQUEST);
         }
     }
 
