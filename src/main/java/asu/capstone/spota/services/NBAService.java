@@ -82,6 +82,8 @@ public class NBAService {
             webProxyConnection.setRequestMethod("GET");
             webProxyConnection.setConnectTimeout(30000);
             webProxyConnection.setReadTimeout(30000);
+            webProxyConnection.setRequestProperty("Referer", "http://stats.nba.com/scores");
+
 
             int status = webProxyConnection.getResponseCode();
 
