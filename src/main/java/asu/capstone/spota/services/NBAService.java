@@ -66,7 +66,7 @@ public class NBAService {
                 .build();
         HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 
-        System.out.println(response);
+        System.out.println("Response: " + response);
 
         ScoreBoard scoreBoard = gson.fromJson(response.body(), ScoreBoard.class);
 
