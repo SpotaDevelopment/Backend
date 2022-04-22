@@ -81,19 +81,15 @@ public class NBAService {
 
         int status = webProxyConnection.getResponseCode();
 
-        if(status > 299) {
+        if (status > 299) {
             reader = new BufferedReader(new InputStreamReader(webProxyConnection.getErrorStream()));
-            while((line = reader.readLine()) != null) {
-                responseContent.append(line);
-            }
-            reader.close();
         } else {
             reader = new BufferedReader(new InputStreamReader(webProxyConnection.getInputStream()));
-            while((line = reader.readLine()) != null) {
-                responseContent.append(line);
-            }
-            reader.close();
         }
+        while((line = reader.readLine()) != null) {
+            responseContent.append(line);
+        }
+        reader.close();
 
         String response = responseContent.toString();
         System.out.println(response);

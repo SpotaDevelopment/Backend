@@ -83,9 +83,10 @@ public class ChatController {
 
     //request for uploading a new chat to the database
     @PostMapping(path = "/users/messages/saveMessage")
-    public ResponseEntity<String> saveMessage(@RequestBody ChatMessage message) {
+    public ResponseEntity<String> saveMessage(@RequestBody String message) {
         try {
-            if(chatService.saveMessage(message)) {
+            ChatMessage msg = gson.fromJson(message, ChatMessage.class);
+            if(chatService.saveMessage(msg)) {
                 return new ResponseEntity<>("successfully uploaded the message", HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("unable to upload the message", HttpStatus.BAD_REQUEST);
