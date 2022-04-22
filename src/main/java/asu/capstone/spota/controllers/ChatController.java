@@ -182,7 +182,8 @@ public class ChatController {
                                 message.getMessageContent(),
                                 message.getSenderId(),
                                 message.getRecipientId(),
-                                message.getGroupChat()
+                                message.getGroupChat(),
+                                message.getChatTimeStamp()
                         )
                 );
             }
