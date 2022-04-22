@@ -54,12 +54,12 @@ public class NBAService {
         String scoresDate = dtf.format(localTime);
         System.out.println("scores Date: " + scoresDate);
 
-        String uri = String.format("http://stats.nba.com/stats/scoreboardv2?DayOffset=0&GameDate=%s&LeagueID=00", scoresDate);
-        System.out.println(uri);
+        String endpoint = String.format("https://stats.nba.com/stats/scoreboardv2?DayOffset=0&GameDate=%s&LeagueID=00", scoresDate);
+        System.out.println(endpoint);
 
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(uri))
+                .uri(URI.create(endpoint))
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .header("Referer", "http://stats.nba.com/scores")
                 //.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36")
