@@ -68,7 +68,7 @@ public class NBAService {
             URL weburl = new URL(endpoint);
             System.setProperty("http.proxyHost", "137.184.0.205");
             System.setProperty("http.proxyPort", "3128");
-            System.setProperty("http.proxyUser", "gcb");
+            System.setProperty("http.proxyUser", "user1");
             System.setProperty("http.proxyPassword", "password");
             HttpURLConnection webProxyConnection = (HttpURLConnection) weburl.openConnection();
 
