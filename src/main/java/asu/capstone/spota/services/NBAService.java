@@ -68,6 +68,8 @@ public class NBAService {
             URL weburl = new URL(endpoint);
             System.setProperty("http.proxyHost", "137.184.0.205");
             System.setProperty("http.proxyPort", "3128");
+            System.setProperty("http.proxyUser", "gcb");
+            System.setProperty("http.proxyPassword", "password");
             HttpURLConnection webProxyConnection = (HttpURLConnection) weburl.openConnection();
 
             //Proxy webProxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("137.184.0.205", 3128));
@@ -77,11 +79,11 @@ public class NBAService {
                 System.out.println("using proxy server");
             }*/
 
-            HttpRequest request = HttpRequest.newBuilder()
+            /*HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(endpoint))
                     .method("GET", HttpRequest.BodyPublishers.noBody())
                     .header("Referer", "http://stats.nba.com/scores")
-                    .build();
+                    .build();*/
 
             webProxyConnection.setRequestMethod("GET");
             webProxyConnection.setConnectTimeout(30000);
