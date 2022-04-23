@@ -55,6 +55,9 @@ public class NBAService {
         LocalDate localTime = LocalDate.now(ZoneId.of("GMT-7"));
         String scoresDate = dtf.format(localTime);
         System.out.println("scores Date: " + scoresDate);
+        String username = "user1";
+        String password = "password";
+
 
         BufferedReader reader;
         String line;
@@ -66,10 +69,21 @@ public class NBAService {
 
             //creating a proxy connection
             URL weburl = new URL(endpoint);
+
+            Authenticator.setDefault(
+                    new Authenticator() {
+                        @Override
+                        public PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(username, password.toCharArray());
+                        }
+                    }
+            );
+
             System.setProperty("http.proxyHost", "137.184.0.205");
             System.setProperty("http.proxyPort", "3128");
-            System.setProperty("http.proxyUser", "user1");
-            System.setProperty("http.proxyPassword", "password");
+            System.setProperty("http.proxyUser", username);
+            System.setProperty("http.proxyPassword", password);
+
             HttpURLConnection webProxyConnection = (HttpURLConnection) weburl.openConnection();
 
             //Proxy webProxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("137.184.0.205", 3128));
